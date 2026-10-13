@@ -3,1171 +3,262 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Little British Scholar (UK EYFS to KS2)</title>
-  <!-- Tailwind CSS CDN -->
+  <title>BritSparks: Royal British Academy (UK EYFS to KS2)</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
-  <!-- Confetti CDN -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Fredoka:wght@500;600;700&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Confetti Effects -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <style>
-    :root {
-      --app-font: 'Quicksand', 'Fredoka', sans-serif;
-    }
-    * {
-      font-family: var(--app-font);
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-    body {
-      background: linear-gradient(150deg, #F0FDF4 0%, #FEF9C3 25%, #FDF2F8 60%, #EFF6FF 100%);
-      min-height: 100vh;
-      min-height: 100dvh;
-      overflow-x: hidden;
-    }
-    .clay-card {
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(14px);
-      border: 3px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 16px 32px -8px rgba(71, 85, 105, 0.13), 0 4px 10px rgba(0, 0, 0, 0.04), inset 0 2px 4px rgba(255, 255, 255, 0.95);
-      border-radius: 26px;
-    }
-    .unified-nav-btn {
-      height: 38px;
-      min-height: 38px;
-      min-width: 38px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 10px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 800;
-      gap: 5px;
-      border-bottom-width: 3px;
-      white-space: nowrap;
-    }
-    @media (min-width: 640px) {
-      .unified-nav-btn {
-        height: 42px;
-        min-height: 42px;
-        min-width: 42px;
-        padding: 0 14px;
-        font-size: 14px;
-        border-bottom-width: 4px;
-      }
-    }
-    .bouncy-btn {
-      transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 5px 0 rgba(0, 0, 0, 0.14), 0 8px 14px -4px rgba(0, 0, 0, 0.10);
-      cursor: pointer;
-    }
-    .bouncy-btn:active:not(:disabled) {
-      transform: translateY(3px);
-      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.14), 0 4px 6px -2px rgba(0, 0, 0, 0.08);
-    }
-    .bouncy-btn:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-    .pop-in {
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.65) translateY(6px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    @keyframes wiggle {
-      0%, 100% { transform: rotate(-5deg); }
-      50% { transform: rotate(5deg); }
-    }
-    .animate-wiggle {
-      animation: wiggle 0.35s ease-in-out;
-    }
-
-    /* British Coin Representations */
-    .uk-coin {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.18), inset 0 2px 4px rgba(255,255,255,0.7);
-    }
-    .coin-1p { width: 48px; height: 48px; border-radius: 9999px; background: linear-gradient(135deg, #c2410c, #78350f); border: 2.5px solid #9a3412; color: #fff; }
-    .coin-2p { width: 56px; height: 56px; border-radius: 9999px; background: linear-gradient(135deg, #ea580c, #7c2d12); border: 3px solid #9a3412; color: #fff; }
-    .coin-5p { width: 44px; height: 44px; border-radius: 9999px; background: linear-gradient(135deg, #cbd5e1, #64748b); border: 2.5px solid #475569; color: #0f172a; }
-    .coin-10p { width: 54px; height: 54px; border-radius: 9999px; background: linear-gradient(135deg, #e2e8f0, #64748b); border: 3px solid #475569; color: #0f172a; }
-    .coin-20p { width: 52px; height: 52px; clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%); background: #94a3b8; border: 2px solid #475569; color: #0f172a; }
-    .coin-pound { width: 58px; height: 58px; border-radius: 9999px; background: radial-gradient(circle, #e2e8f0 55%, #eab308 56%); border: 3.5px solid #ca8a04; color: #1e293b; }
-
-    /* Sound visualizer */
-    .sound-wave-bar {
-      width: 4px;
-      height: 14px;
-      background-color: #3b82f6;
-      border-radius: 9999px;
-      animation: wavePulse 0.8s ease-in-out infinite alternate;
-    }
-    .sound-wave-bar:nth-child(2) { animation-delay: 0.2s; height: 22px; }
-    .sound-wave-bar:nth-child(3) { animation-delay: 0.4s; height: 18px; }
-    .sound-wave-bar:nth-child(4) { animation-delay: 0.1s; height: 25px; }
-    @keyframes wavePulse {
-      0% { transform: scaleY(0.4); }
-      100% { transform: scaleY(1.3); }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="flex flex-col items-center justify-between p-2 sm:p-5 text-slate-800">
+<body class="flex flex-col items-center justify-between p-2 sm:p-5 text-slate-900 min-h-screen">
 
-  <!-- Top Navigation Header -->
-  <header class="w-full max-w-5xl flex items-center justify-between clay-card px-2 sm:px-4 py-2 mb-3 gap-1 sm:gap-2 relative z-30">
-    <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-      <button id="navBackBtn" type="button" onclick="handleNavigationBack()" class="unified-nav-btn bouncy-btn bg-gradient-to-b from-rose-400 to-pink-500 text-white border-pink-700">
+  <!-- Royal Navigation Header -->
+  <header class="w-full max-w-5xl flex items-center justify-between royal-card px-3 sm:px-5 py-2 mb-3 gap-1.5 sm:gap-3 relative z-30">
+    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <button id="navBackBtn" type="button" onclick="handleNavigationBack()" class="unified-nav-btn bouncy-btn royal-gold-btn text-slate-900 border-amber-600">
         <span id="navBackIcon">🏛️</span>
-        <span id="navBackLabel" class="hidden md:inline">Curriculum</span>
+        <span id="navBackLabel" class="hidden md:inline font-bold">Curriculum</span>
       </button>
 
-      <button id="teacherVoiceModalBtn" type="button" onclick="openTeacherVoiceModal()" class="unified-nav-btn bouncy-btn bg-gradient-to-b from-purple-400 to-indigo-500 text-white border-indigo-700">
-        <span id="currentTeacherAvatar">🇬🇧</span>
-        <span id="currentTeacherNamePill" class="hidden md:inline">Miss Sophie</span>
+      <button id="teacherVoiceModalBtn" type="button" onclick="openTeacherVoiceModal()" class="unified-nav-btn bouncy-btn bg-gradient-to-b from-indigo-700 to-indigo-900 text-amber-200 border-indigo-950">
+        <span id="currentTeacherAvatar">👑</span>
+        <span id="currentTeacherNamePill" class="hidden md:inline font-bold">Lady Victoria</span>
       </button>
 
-      <button id="toggleAudioBtn" type="button" onclick="toggleAudioMute()" class="unified-nav-btn bouncy-btn bg-gradient-to-b from-sky-400 to-blue-500 text-white border-blue-700">
+      <button id="toggleAudioBtn" type="button" onclick="toggleAudioMute()" class="unified-nav-btn bouncy-btn bg-gradient-to-b from-sky-600 to-sky-800 text-white border-sky-950">
         <span id="audioMuteIcon">🔊</span>
-        <span id="audioMuteLabel" class="hidden md:inline">Audio</span>
+        <span id="audioMuteLabel" class="hidden md:inline font-bold">Speech</span>
       </button>
     </div>
 
-    <div id="activeGradePill" class="flex items-center gap-1 bg-slate-100/90 border border-slate-300 px-2.5 py-1 rounded-xl text-xs font-black text-slate-700 shrink">
+    <!-- Active Stage Badge -->
+    <div id="activeGradePill" class="flex items-center gap-1.5 bg-slate-900/90 border-2 border-amber-400 px-3 py-1 rounded-xl text-xs font-black text-amber-300 shadow-sm">
       <span id="activeGradePillIcon">🇬🇧</span>
-      <span id="activeGradePillText" class="truncate">Reception</span>
+      <span id="activeGradePillText" class="truncate font-serif">Reception (EYFS)</span>
     </div>
 
-    <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-      <div class="unified-nav-btn bg-amber-50 border-2 border-amber-300 text-amber-800 shadow-inner cursor-default !px-2.5">
+    <!-- Right Controls: Royal Stars, Honours, Parents -->
+    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <div class="unified-nav-btn bg-amber-500/20 border-2 border-amber-400 text-amber-300 shadow-inner cursor-default !px-2.5">
         <span class="text-base">⭐</span>
-        <span id="headerStars" class="font-extrabold text-sm sm:text-base">0</span>
+        <span id="headerStars" class="font-black text-sm sm:text-base">0</span>
       </div>
 
-      <button id="openAlbumBtn" type="button" onclick="openStickerModal()" class="unified-nav-btn bouncy-btn bg-gradient-to-b from-emerald-400 to-teal-500 text-white border-teal-700 !px-2.5">
-        <span>🎁</span>
-        <span class="hidden md:inline">Badges</span>
+      <button id="openAlbumBtn" type="button" onclick="openRoyalTreasuryModal()" class="unified-nav-btn bouncy-btn bg-gradient-to-b from-amber-500 to-yellow-600 text-slate-950 border-amber-700 !px-2.5 font-bold">
+        <span>👑</span>
+        <span class="hidden md:inline">Honours</span>
+        <span id="albumTierBadge" class="ml-1 bg-red-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-sans">0/12</span>
       </button>
 
-      <button id="openParentGateBtn" type="button" onclick="openParentGate()" class="unified-nav-btn bouncy-btn bg-gradient-to-b from-slate-700 to-slate-900 text-amber-200 border-slate-950 !px-2.5">
+      <button id="openParentGateBtn" type="button" onclick="openParentGate()" class="unified-nav-btn bouncy-btn bg-slate-800 text-slate-200 border-slate-950 !px-2.5">
         <span>🔒</span>
-        <span class="hidden md:inline">Parents</span>
+        <span class="hidden md:inline font-bold">Parents</span>
       </button>
     </div>
   </header>
 
-  <!-- Main Portal -->
+  <!-- Main Stage -->
   <main class="w-full max-w-5xl flex-1 flex flex-col items-center justify-center relative z-10">
 
-    <!-- Grade Selection Grid (Age 2 to 10) -->
+    <!-- 1. Curriculum Stage Selection (Age 2 to 10) -->
     <div id="curriculumPortalScreen" class="w-full flex flex-col items-center gap-4 py-2">
       <div class="text-center max-w-2xl px-2">
-        <div class="inline-flex items-center gap-2 bg-white/95 px-4 py-1.5 rounded-full shadow-sm border border-indigo-200 mb-2">
-          <span class="text-xs sm:text-sm font-extrabold text-indigo-700 tracking-wide">🇬🇧 English National Curriculum & EYFS Framework</span>
+        <div class="inline-flex items-center gap-2 bg-slate-900/90 px-4 py-1.5 rounded-full shadow-md border border-amber-400 mb-2">
+          <span class="text-xs sm:text-sm font-extrabold text-amber-300 tracking-wider font-serif">👑 ROYAL CURRICULUM • UK NATIONAL FRAMEWORK</span>
         </div>
-        <h1 class="text-3xl sm:text-5xl font-black text-slate-800 tracking-tight">
-          <span class="text-rose-600">Little</span> <span class="text-sky-600">British</span> <span class="text-amber-500">Scholar</span>
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight royal-title">
+          Brit<span class="text-amber-400">Sparks</span>
         </h1>
-        <p class="text-xs sm:text-sm font-bold text-slate-600 mt-1">
-          Explore Phonics (Phases 1-5), British Maths Mastery, UK Coins & Telling Time from Toddler (Age 2) to Year 5 (Age 10)!
+        <p class="text-xs sm:text-sm font-bold text-slate-200 mt-1 max-w-lg mx-auto">
+          From Toddler (Age 2) to Year 5 (Age 10): Phonics Phases 1-5, UK Currency & Mastery Maths under Royal Patronage.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full px-2">
-        
-        <!-- Age 2-3: Toddler -->
-        <div class="clay-card p-4 flex flex-col justify-between border-t-8 border-teal-400 hover:shadow-xl transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-3xl">🧸</span>
-              <span class="bg-teal-100 text-teal-800 text-[11px] font-black px-2 py-0.5 rounded-full">Age 2 - 3</span>
-            </div>
-            <h2 class="text-lg font-black text-slate-800">Toddler / Pre-School</h2>
-            <div class="text-xs font-bold text-teal-600">EYFS Sensory Discovery</div>
-            <ul class="mt-2.5 space-y-1 text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
-              <li>🔊 Phonics Phase 1: Animal sounds</li>
-              <li>🔢 Number Sense 1 - 3</li>
-              <li>📐 Big vs Small visual sorting</li>
-            </ul>
-          </div>
-          <button type="button" onclick="selectGrade('toddler')" class="bouncy-btn mt-3 w-full bg-gradient-to-b from-teal-400 to-emerald-500 text-white font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-emerald-700">
-            Start Toddler 👉
-          </button>
-        </div>
-
-        <!-- Age 3-4: Nursery -->
-        <div class="clay-card p-4 flex flex-col justify-between border-t-8 border-emerald-400 hover:shadow-xl transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-3xl">🌱</span>
-              <span class="bg-emerald-100 text-emerald-800 text-[11px] font-black px-2 py-0.5 rounded-full">Age 3 - 4</span>
-            </div>
-            <h2 class="text-lg font-black text-slate-800">Nursery (EYFS)</h2>
-            <div class="text-xs font-bold text-emerald-600">Foundational Phonics & Maths</div>
-            <ul class="mt-2.5 space-y-1 text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
-              <li>🔤 Phonics Phase 1: Rhyme & alliteration</li>
-              <li>🔢 Counting objects 1 to 5</li>
-              <li>🔷 2D Shapes (Circle, Square, Triangle)</li>
-            </ul>
-          </div>
-          <button type="button" onclick="selectGrade('nursery')" class="bouncy-btn mt-3 w-full bg-gradient-to-b from-emerald-400 to-teal-500 text-white font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-teal-700">
-            Start Nursery 👉
-          </button>
-        </div>
-
-        <!-- Age 4-5: Reception -->
-        <div class="clay-card p-4 flex flex-col justify-between border-t-8 border-sky-400 hover:shadow-xl transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-3xl">🌸</span>
-              <span class="bg-sky-100 text-sky-800 text-[11px] font-black px-2 py-0.5 rounded-full">Age 4 - 5</span>
-            </div>
-            <h2 class="text-lg font-black text-slate-800">Reception (EYFS)</h2>
-            <div class="text-xs font-bold text-sky-600">CVC Words & Concrete Maths</div>
-            <ul class="mt-2.5 space-y-1 text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
-              <li>🔤 Phonics Phase 2: s, a, t, p, i, n</li>
-              <li>🐱 CVC Word Blending (cat, dog, sun)</li>
-              <li>➕ Ten-Frame & Interactive addition</li>
-            </ul>
-          </div>
-          <button type="button" onclick="selectGrade('reception')" class="bouncy-btn mt-3 w-full bg-gradient-to-b from-sky-400 to-blue-500 text-white font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-blue-700">
-            Start Reception 👉
-          </button>
-        </div>
-
-        <!-- Age 5-6: Year 1 -->
-        <div class="clay-card p-4 flex flex-col justify-between border-t-8 border-indigo-400 hover:shadow-xl transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-3xl">⭐</span>
-              <span class="bg-indigo-100 text-indigo-800 text-[11px] font-black px-2 py-0.5 rounded-full">Age 5 - 6</span>
-            </div>
-            <h2 class="text-lg font-black text-slate-800">Year 1 (KS1)</h2>
-            <div class="text-xs font-bold text-indigo-600">Digraphs & UK Coins</div>
-            <ul class="mt-2.5 space-y-1 text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
-              <li>📖 Phonics Phase 3/4 Digraphs (sh, ch, th)</li>
-              <li>🪙 British Coins (1p, 2p, 5p, 10p, 20p, £1)</li>
-              <li>🔟 Number Bonds to 10 & 20</li>
-            </ul>
-          </div>
-          <button type="button" onclick="selectGrade('year1')" class="bouncy-btn mt-3 w-full bg-gradient-to-b from-indigo-400 to-indigo-600 text-white font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-indigo-800">
-            Start Year 1 👉
-          </button>
-        </div>
-
-        <!-- Age 6-7: Year 2 -->
-        <div class="clay-card p-4 flex flex-col justify-between border-t-8 border-amber-400 hover:shadow-xl transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-3xl">🚀</span>
-              <span class="bg-amber-100 text-amber-800 text-[11px] font-black px-2 py-0.5 rounded-full">Age 6 - 7</span>
-            </div>
-            <h2 class="text-lg font-black text-slate-800">Year 2 (KS1)</h2>
-            <div class="text-xs font-bold text-amber-600">Fluency & Times Tables</div>
-            <ul class="mt-2.5 space-y-1 text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
-              <li>✨ Phonics Phase 5 Alternative spellings</li>
-              <li>✖️ 2, 5, 10 Times Tables</li>
-              <li>⏰ Telling the Time (o'clock & half past)</li>
-            </ul>
-          </div>
-          <button type="button" onclick="selectGrade('year2')" class="bouncy-btn mt-3 w-full bg-gradient-to-b from-amber-400 to-orange-500 text-white font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-orange-700">
-            Start Year 2 👉
-          </button>
-        </div>
-
-        <!-- Age 7-8: Year 3 -->
-        <div class="clay-card p-4 flex flex-col justify-between border-t-8 border-rose-400 hover:shadow-xl transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-3xl">🏰</span>
-              <span class="bg-rose-100 text-rose-800 text-[11px] font-black px-2 py-0.5 rounded-full">Age 7 - 8</span>
-            </div>
-            <h2 class="text-lg font-black text-slate-800">Year 3 (KS2)</h2>
-            <div class="text-xs font-bold text-rose-600">Prefixes & 3-Digit Maths</div>
-            <ul class="mt-2.5 space-y-1 text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
-              <li>📚 Vocabulary & Prefixes (un-, dis-, re-)</li>
-              <li>✖️ 3, 4, 8 Times Tables</li>
-              <li>🛒 UK Supermarket Cart (Pounds & Pence)</li>
-            </ul>
-          </div>
-          <button type="button" onclick="selectGrade('year3')" class="bouncy-btn mt-3 w-full bg-gradient-to-b from-rose-400 to-pink-500 text-white font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-pink-700">
-            Start Year 3 👉
-          </button>
-        </div>
-
-        <!-- Age 8-9: Year 4 -->
-        <div class="clay-card p-4 flex flex-col justify-between border-t-8 border-purple-400 hover:shadow-xl transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-3xl">⚔️</span>
-              <span class="bg-purple-100 text-purple-800 text-[11px] font-black px-2 py-0.5 rounded-full">Age 8 - 9</span>
-            </div>
-            <h2 class="text-lg font-black text-slate-800">Year 4 (KS2)</h2>
-            <div class="text-xs font-bold text-purple-600">MTC Tables & Grammar</div>
-            <ul class="mt-2.5 space-y-1 text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
-              <li>📝 Grammar & Homophones (their/there)</li>
-              <li>⚡ All Times Tables to 12 × 12</li>
-              <li>💎 Place value to 1,000s</li>
-            </ul>
-          </div>
-          <button type="button" onclick="selectGrade('year4')" class="bouncy-btn mt-3 w-full bg-gradient-to-b from-purple-400 to-indigo-600 text-white font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-indigo-700">
-            Start Year 4 👉
-          </button>
-        </div>
-
-        <!-- Age 9-10: Year 5 -->
-        <div class="clay-card p-4 flex flex-col justify-between border-t-8 border-fuchsia-400 hover:shadow-xl transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-3xl">👑</span>
-              <span class="bg-fuchsia-100 text-fuchsia-800 text-[11px] font-black px-2 py-0.5 rounded-full">Age 9 - 10</span>
-            </div>
-            <h2 class="text-lg font-black text-slate-800">Year 5 (KS2)</h2>
-            <div class="text-xs font-bold text-fuchsia-600">Advanced Reasoning</div>
-            <ul class="mt-2.5 space-y-1 text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
-              <li>🔍 Root Words & Synonyms</li>
-              <li>🔢 Prime Numbers & Square Numbers</li>
-              <li>🍰 Equivalent Fractions & Decimals</li>
-            </ul>
-          </div>
-          <button type="button" onclick="selectGrade('year5')" class="bouncy-btn mt-3 w-full bg-gradient-to-b from-fuchsia-400 to-rose-600 text-white font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-rose-800">
-            Start Year 5 👉
-          </button>
-        </div>
-
+      <div id="gradeCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 w-full px-2">
+        <!-- Rendered dynamically from data.js -->
       </div>
     </div>
 
-    <!-- Topic Selection Lobby -->
+    <!-- 2. Topic Mission Selection Lobby -->
     <div id="gradeLobbyScreen" class="w-full flex-col items-center gap-4 py-2" style="display: none;">
       <div class="text-center">
-        <span id="lobbyBadge" class="text-xs font-black px-3.5 py-1 rounded-full bg-sky-100 text-sky-800 uppercase tracking-widest">Year Group</span>
-        <h2 id="lobbyTitle" class="text-2xl sm:text-4xl font-black text-slate-800 mt-1">Choose a Learning Mission</h2>
-        <p id="lobbySubtitle" class="text-xs sm:text-sm font-bold text-slate-500">Pick Phonics or Maths to start playing!</p>
+        <span id="lobbyBadge" class="text-xs font-black px-4 py-1 rounded-full bg-amber-500/20 border border-amber-400 text-amber-300 uppercase tracking-widest font-serif">Key Stage Mission</span>
+        <h2 id="lobbyTitle" class="text-2xl sm:text-4xl font-black text-white mt-1.5 font-serif">Choose Your Royal Mission</h2>
+        <p id="lobbySubtitle" class="text-xs sm:text-sm font-bold text-slate-300">Select English Phonics or British Maths to begin!</p>
       </div>
       <div id="lobbyCardsContainer" class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl px-2"></div>
     </div>
 
-    <!-- Active Gameplay Screen -->
+    <!-- 3. Interactive Challenge Arena -->
     <div id="gamePlayScreen" class="w-full flex-col items-center" style="display: none;">
+      
+      <!-- Voice Prompt Banner -->
       <div class="w-full max-w-3xl flex items-center justify-center gap-2 sm:gap-3 mb-2.5">
-        <button id="replayVoiceBtn" type="button" onclick="speakCurrentQuestionPrompt()" class="bouncy-btn bg-gradient-to-b from-amber-300 to-amber-500 text-amber-950 p-2 sm:px-3 sm:py-2.5 rounded-2xl border-b-4 border-amber-600 flex items-center gap-1.5 font-black shrink-0">
+        <button id="replayVoiceBtn" type="button" onclick="speakCurrentPrompt(true)" class="bouncy-btn royal-gold-btn text-slate-950 p-2 sm:px-3.5 sm:py-2.5 rounded-2xl border-b-4 border-amber-600 flex items-center gap-1.5 font-black shrink-0">
           <span class="text-xl sm:text-2xl">🗣️</span>
-          <span class="text-xs sm:text-sm hidden sm:inline">Listen Again</span>
+          <span class="text-xs sm:text-sm hidden sm:inline">Hear Lady Victoria</span>
         </button>
-        <div id="promptDisplayBanner" class="clay-card px-4 sm:px-6 py-2.5 text-center flex-1">
-          <div id="promptTitle" class="text-base sm:text-xl font-extrabold text-slate-800">Loading mission...</div>
-          <div id="promptSubtitle" class="text-xs sm:text-sm font-bold text-sky-600">Please wait</div>
+        <div id="promptDisplayBanner" class="royal-card px-4 sm:px-6 py-2.5 text-center flex-1">
+          <div id="promptTitle" class="text-base sm:text-xl font-black text-amber-200 font-serif">Mission Loading...</div>
+          <div id="promptSubtitle" class="text-xs sm:text-sm font-bold text-slate-300 flex items-center justify-center gap-1">Please stand by</div>
         </div>
       </div>
 
-      <div class="w-full max-w-3xl clay-card p-4 sm:p-6 min-h-[360px] flex flex-col items-center justify-center relative">
-        <div id="missionBadgePill" class="absolute top-2.5 left-3 sm:left-5 inline-flex items-center gap-1.5 bg-indigo-100/90 border border-indigo-300 text-indigo-900 text-xs font-black px-3 py-1 rounded-full">
-          <span>🇬🇧</span> <span id="missionBadgeText">Phonics Mission</span>
+      <!-- Challenge Sandbox Area -->
+      <div class="w-full max-w-3xl royal-card p-4 sm:p-6 min-h-[360px] flex flex-col items-center justify-center relative">
+        <div id="missionBadgePill" class="absolute top-3 left-4 inline-flex items-center gap-1.5 bg-amber-400/20 border border-amber-400 text-amber-300 text-xs font-black px-3 py-1 rounded-full font-serif">
+          <span>🇬🇧</span> <span id="missionBadgeText">Phonics Exploration</span>
         </div>
 
-        <!-- Stage 1: Phonics Letter Sound & Blending -->
-        <div id="stagePhonics" class="w-full flex-col items-center py-4" style="display: none;">
-          <div id="phonicsTargetDisplay" class="text-6xl sm:text-7xl font-black text-indigo-600 mb-2 cursor-pointer" onclick="speakTargetPhonicsSound()"></div>
-          <div id="phonicsHintWord" class="text-sm font-extrabold text-slate-500 bg-slate-100 px-4 py-1 rounded-full mb-3"></div>
-          <div class="text-xs font-bold text-slate-500">Tap the card that matches the sound!</div>
+        <!-- Stage: Phonics Blending & Letters -->
+        <div id="stagePhonics" class="w-full flex-col items-center py-3" style="display: none;">
+          <div id="phonicsTargetDisplay" class="text-6xl sm:text-7xl font-black text-amber-300 mb-2 cursor-pointer transition-transform hover:scale-105" onclick="speakTargetPhonicsSound()"></div>
+          <div id="phonicsHintWord" class="text-sm font-black text-slate-200 bg-slate-800/80 border border-slate-700 px-4 py-1 rounded-full mb-3"></div>
+          <div class="text-xs font-bold text-slate-400">Tap the card with the matching phonetic sound!</div>
         </div>
 
-        <!-- Stage 2: Toddler / Nursery Counting -->
-        <div id="stageEarlyCount" class="w-full flex-col items-center py-4" style="display: none;">
-          <div class="text-xs sm:text-sm font-bold text-slate-500 mb-2 bg-slate-100 px-3 py-1 rounded-full">👆 Tap each item to count together!</div>
+        <!-- Stage: Early Objects Counting -->
+        <div id="stageEarlyCount" class="w-full flex-col items-center py-3" style="display: none;">
+          <div class="text-xs sm:text-sm font-bold text-amber-300 mb-2 bg-slate-900/60 border border-amber-500/40 px-4 py-1 rounded-full">👆 Tap each royal mascot to count aloud!</div>
           <div id="earlyCountGrid" class="flex flex-wrap justify-center items-center gap-4 sm:gap-6 max-w-lg min-h-[120px]"></div>
         </div>
 
-        <!-- Stage 3: Number Bonds & Ten-Frame -->
+        <!-- Stage: Ten-Frame Addition -->
         <div id="stageTenFrame" class="w-full flex-col items-center py-3" style="display: none;">
-          <div class="text-xs sm:text-sm font-bold text-amber-800 mb-2 bg-amber-50 border border-amber-300 px-3.5 py-1 rounded-full">Ten-Frame: How many more to make 10?</div>
-          <div id="tenFrameGrid" class="grid grid-cols-5 gap-2 p-3 bg-white border-4 border-amber-300 rounded-2xl shadow-inner max-w-xs mb-3"></div>
-          <div class="flex items-center justify-center gap-2 text-2xl sm:text-3xl font-black text-amber-950 bg-amber-50 px-5 py-2 rounded-2xl border-2 border-amber-200">
+          <div class="text-xs sm:text-sm font-bold text-amber-200 mb-2 bg-slate-900/60 border border-amber-400/40 px-4 py-1 rounded-full font-serif">Royal Ten-Frame: Make 10!</div>
+          <div id="tenFrameGrid" class="grid grid-cols-5 gap-2 p-3 bg-slate-900 border-2 border-amber-400 rounded-2xl shadow-inner max-w-xs mb-3"></div>
+          <div class="flex items-center justify-center gap-2 text-2xl sm:text-3xl font-black text-amber-300 bg-slate-900/90 px-5 py-2 rounded-2xl border border-amber-400">
             <span id="tenFrameGiven">7</span>
-            <span class="text-amber-500">➕</span>
-            <span class="w-12 h-12 rounded-xl border-3 border-dashed border-amber-400 bg-white flex items-center justify-center text-amber-600">❓</span>
-            <span class="text-emerald-600">🟰</span>
-            <span class="text-rose-600">10</span>
+            <span class="text-rose-400">➕</span>
+            <span class="w-12 h-12 rounded-xl border-2 border-dashed border-amber-400 bg-slate-800 flex items-center justify-center text-amber-400">❓</span>
+            <span class="text-emerald-400">🟰</span>
+            <span class="text-amber-300 font-serif">10</span>
           </div>
         </div>
 
-        <!-- Stage 4: British Coins Identification & Value -->
-        <div id="stageUkCoins" class="w-full flex-col items-center py-3" style="display: none;">
-          <div class="text-xs sm:text-sm font-bold text-slate-600 mb-2">Identify the British Coin:</div>
-          <div id="ukCoinTargetBox" class="my-4 transform scale-125"></div>
-          <div class="text-xs font-bold text-slate-500">Which coin is this in British currency?</div>
+        <!-- Stage: British Coins Identification -->
+        <div id="stageUkCoins" class="w-full flex-col items-center py-2" style="display: none;">
+          <div class="text-xs sm:text-sm font-bold text-slate-300 mb-2 font-serif">Identify the British Sovereign Coin:</div>
+          <div id="ukCoinTargetBox" class="my-3 transform scale-125"></div>
+          <div class="text-xs font-bold text-slate-400">Select the matching denomination below:</div>
         </div>
 
-        <!-- Stage 5: Times Tables (Year 2 - 4) -->
+        <!-- Stage: Times Tables Mastery -->
         <div id="stageTimesTables" class="w-full flex-col items-center py-4" style="display: none;">
-          <div class="text-xs font-black text-purple-700 bg-purple-100 px-3 py-1 rounded-full mb-3">Multiplication Tables Challenge</div>
-          <div class="clay-card px-8 py-5 flex items-center justify-center gap-3 text-3xl sm:text-5xl font-black text-slate-800 border-2 border-purple-200">
-            <span id="timesTableA">4</span>
-            <span class="text-purple-600">✖️</span>
-            <span id="timesTableB">6</span>
-            <span class="text-emerald-500">🟰</span>
-            <span class="w-16 h-16 rounded-2xl border-4 border-dashed border-purple-400 bg-purple-50 flex items-center justify-center text-purple-500">❓</span>
+          <div class="text-xs font-black text-amber-300 bg-slate-900 border border-amber-400 px-3.5 py-1 rounded-full mb-3 font-serif">Royal Multiplication Academy</div>
+          <div class="royal-card px-8 py-5 flex items-center justify-center gap-3 text-3xl sm:text-5xl font-black text-white border-2 border-amber-400/60">
+            <span id="timesTableA" class="text-amber-300">4</span>
+            <span class="text-rose-400">✖️</span>
+            <span id="timesTableB" class="text-sky-300">6</span>
+            <span class="text-emerald-400">🟰</span>
+            <span class="w-16 h-16 rounded-2xl border-4 border-dashed border-amber-400 bg-slate-900 flex items-center justify-center text-amber-400">❓</span>
           </div>
         </div>
 
-        <!-- Stage 6: Year 3 Supermarket Cart (Pounds & Pence) -->
+        <!-- Stage: Supermarket Cart (£ / p) -->
         <div id="stageUkMarket" class="w-full flex-col items-center py-2 max-w-lg" style="display: none;">
-          <div class="w-full bg-gradient-to-b from-amber-50 to-orange-50/50 border-2 border-amber-300 rounded-3xl p-3.5 shadow-sm mb-2">
-            <div class="flex items-center justify-between border-b border-amber-200 pb-2 mb-2">
-              <span class="text-xs font-black text-amber-900 flex items-center gap-1.5">
-                <span>🛒</span> British Supermarket Basket
+          <div class="w-full bg-slate-900/90 border-2 border-amber-400/80 rounded-3xl p-3.5 shadow-md mb-2">
+            <div class="flex items-center justify-between border-b border-amber-400/40 pb-2 mb-2">
+              <span class="text-xs font-black text-amber-300 flex items-center gap-1.5 font-serif">
+                <span>🧺</span> London Royal Pantry
               </span>
-              <span class="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-amber-200">GBP (£ / p)</span>
+              <span class="text-[10px] font-bold text-slate-300 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">British Sterling (£)</span>
             </div>
             <div id="ukMarketItemList" class="flex flex-col gap-1.5 mb-2.5"></div>
-            <div class="flex items-center justify-between bg-white px-3.5 py-2 rounded-2xl border border-amber-300">
-              <span class="text-xs font-black text-slate-700">Total to Pay:</span>
-              <div id="ukMarketEquation" class="text-base sm:text-lg font-black text-rose-600"></div>
+            <div class="flex items-center justify-between bg-slate-800 px-3.5 py-2 rounded-2xl border border-amber-400/50">
+              <span class="text-xs font-black text-slate-300">Total Price:</span>
+              <div id="ukMarketEquation" class="text-base sm:text-lg font-black text-amber-300 font-serif"></div>
             </div>
           </div>
-          <div class="text-xs font-bold text-slate-500">Select the correct checkout total!</div>
+          <div class="text-xs font-bold text-slate-400">Choose the correct settlement amount:</div>
         </div>
       </div>
 
-      <!-- Option Buttons Row -->
+      <!-- Dynamic Answer Choices -->
       <div id="numberOptionsRow" class="w-full mt-3.5 flex justify-center items-center gap-2.5 sm:gap-4 flex-wrap"></div>
     </div>
 
-    <!-- Badges Modal -->
-    <div id="stickerAlbumModal" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 items-center justify-center p-3 sm:p-4" style="display: none;">
-      <div class="clay-card p-5 max-w-lg w-full border-4 border-amber-300 flex flex-col items-center text-center pop-in">
-        <h3 class="text-xl sm:text-2xl font-black text-amber-900 mb-1">British Scholar Badges</h3>
-        <p class="text-xs font-bold text-slate-500">Earn stars and unlock Royal British collector badges!</p>
-        <div id="badgeGridContainer" class="grid grid-cols-3 sm:grid-cols-4 gap-2.5 w-full my-3 p-2 bg-amber-50/80 rounded-2xl border border-amber-200 min-h-[180px]"></div>
-        <button type="button" onclick="closeStickerModal()" class="bouncy-btn w-full bg-gradient-to-b from-rose-400 to-pink-500 text-white font-black py-2.5 rounded-xl border-b-4 border-pink-700">
-          Back to Adventure 🎈
+    <!-- Modal 1: Royal Honours Treasury -->
+    <div id="royalTreasuryModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 items-center justify-center p-3 sm:p-4" style="display: none;">
+      <div class="royal-card p-5 max-w-lg w-full border-2 border-amber-400 flex flex-col items-center text-center pop-in max-h-[90vh]">
+        <h3 class="text-xl sm:text-2xl font-black text-amber-300 font-serif mb-1">👑 Royal Honours Treasury</h3>
+        <p class="text-xs font-semibold text-slate-300">Tap unlocked badges to inspect them in 3D and hear royal commentary!</p>
+        <div id="badgeGridContainer" class="grid grid-cols-3 sm:grid-cols-4 gap-2.5 w-full my-3 p-2 bg-slate-900/80 rounded-2xl border border-amber-400/30 overflow-y-auto max-h-[50vh]"></div>
+        <button type="button" onclick="closeRoyalTreasuryModal()" class="bouncy-btn royal-gold-btn text-slate-950 font-black py-2.5 rounded-xl w-full border-b-4 border-amber-600">
+          Return to Royal Court 🎈
         </button>
       </div>
     </div>
 
-    <!-- Teacher Voice Modal -->
-    <div id="teacherVoiceModal" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 items-center justify-center p-4" style="display: none;">
-      <div class="clay-card p-5 max-w-md w-full border-4 border-indigo-300 flex flex-col items-center text-center pop-in">
-        <div class="text-3xl mb-1">🇬🇧</div>
-        <h3 class="text-xl font-black text-slate-800">British Accent Teachers</h3>
-        <p class="text-xs font-bold text-slate-500 mb-3">Choose your favourite teacher for Phonics and Maths reading:</p>
-        <div id="teacherCardsList" class="flex flex-col gap-2.5 w-full"></div>
-        <button type="button" onclick="closeTeacherVoiceModal()" class="bouncy-btn mt-3 w-full bg-indigo-600 text-white font-black py-2.5 rounded-xl border-b-4 border-indigo-800">
-          Done & Save
+    <!-- Modal 2: 3D Badge Showcase Modal -->
+    <div id="badgeShowcaseModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 items-center justify-center p-4" style="display: none;">
+      <div class="royal-card p-5 max-w-sm w-full border-2 border-amber-400 flex flex-col items-center text-center pop-in relative">
+        <button type="button" onclick="closeShowcaseModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white font-black text-lg">✕</button>
+        <h4 id="showcaseBadgeName" class="text-lg font-black text-amber-300 font-serif mt-1">Imperial Crown</h4>
+        <span id="showcaseTierTag" class="text-[10px] font-black px-2.5 py-0.5 rounded-full text-slate-950 bg-amber-400 my-1 font-serif">Royal Bronze</span>
+        <div id="showcaseIconContainer" class="w-28 h-28 rounded-3xl my-3 flex items-center justify-center text-6xl shadow-2xl animate-gentleFloatWiggle">👑</div>
+        <p id="showcaseSpeechText" class="text-xs font-bold text-slate-200 bg-slate-900/90 p-2.5 rounded-xl border border-amber-400/40 italic"></p>
+        <div class="grid grid-cols-2 gap-2 w-full mt-3">
+          <button type="button" onclick="replayShowcaseVoice()" class="bouncy-btn bg-indigo-700 text-white font-bold text-xs py-2 rounded-xl border-b-4 border-indigo-900">
+            🔊 Listen
+          </button>
+          <button type="button" onclick="closeShowcaseModal()" class="bouncy-btn bg-slate-700 text-white font-bold text-xs py-2 rounded-xl border-b-4 border-slate-900">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 3: British Voice & Governess Selection -->
+    <div id="teacherVoiceModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 items-center justify-center p-4" style="display: none;">
+      <div class="royal-card p-5 max-w-md w-full border-2 border-amber-400 flex flex-col items-center text-center pop-in">
+        <div class="text-3xl mb-1">👑</div>
+        <h3 class="text-xl font-black text-amber-300 font-serif">Royal English Governess & Tutors</h3>
+        <p class="text-xs font-medium text-slate-300 mb-3">Authentic British English pronunciation for Phonics & Maths:</p>
+        <div id="teacherCardsList" class="flex flex-col gap-2 w-full"></div>
+        <button type="button" onclick="closeTeacherVoiceModal()" class="bouncy-btn mt-3 w-full royal-gold-btn text-slate-950 font-black py-2.5 rounded-xl border-b-4 border-amber-600">
+          Save Settings
         </button>
       </div>
     </div>
 
-    <!-- Parent Gate Modal -->
-    <div id="parentGateModal" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 items-center justify-center p-4" style="display: none;">
-      <div class="clay-card p-6 max-w-md w-full border-4 border-slate-300 flex flex-col items-center text-center pop-in">
+    <!-- Modal 4: Grown-ups Gate -->
+    <div id="parentGateModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 items-center justify-center p-4" style="display: none;">
+      <div class="royal-card p-6 max-w-md w-full border-2 border-amber-400 flex flex-col items-center text-center pop-in">
         <div class="text-3xl mb-1">🔒</div>
-        <h3 class="text-xl font-black text-slate-800">Grown-Ups Verification</h3>
-        <p class="text-xs font-semibold text-slate-500 mt-1">Please solve the equation to access curriculum insights:</p>
-        <div id="parentLockChallenge" class="w-full my-3 p-3 bg-slate-100 rounded-2xl border border-slate-300">
-          <div id="parentLockFormula" class="text-2xl font-black text-slate-700 tracking-wider">7 × 8 = ?</div>
-          <input id="parentLockInput" type="number" placeholder="Answer" class="mt-2 w-28 text-center text-xl font-black p-1.5 rounded-xl border-2 border-slate-400 focus:outline-none focus:border-indigo-500">
-          <button type="button" onclick="verifyParentPass()" class="bouncy-btn mt-2 bg-indigo-600 text-white font-bold text-xs px-4 py-2 rounded-xl block mx-auto">Verify</button>
+        <h3 class="text-xl font-black text-amber-300 font-serif">Parents Verification</h3>
+        <p class="text-xs font-semibold text-slate-300 mt-1">Solve the equation to inspect National Curriculum progress:</p>
+        <div id="parentLockChallenge" class="w-full my-3 p-3 bg-slate-900/90 rounded-2xl border border-slate-700">
+          <div id="parentLockFormula" class="text-2xl font-black text-amber-300 tracking-wider font-serif">8 × 9 = ?</div>
+          <input id="parentLockInput" type="number" placeholder="Ans" class="mt-2 w-28 text-center text-xl font-black p-1.5 rounded-xl bg-slate-800 text-white border-2 border-amber-400 focus:outline-none">
+          <button type="button" onclick="verifyParentPass()" class="bouncy-btn mt-2 royal-gold-btn text-slate-950 font-black text-xs px-4 py-2 rounded-xl block mx-auto">Verify</button>
         </div>
         <div id="parentDashboardReport" class="w-full text-left my-2" style="display: none;">
-          <h4 class="text-sm font-black text-slate-800 border-b pb-1">UK Curriculum Learning Report</h4>
+          <h4 class="text-xs font-black text-amber-300 border-b border-slate-700 pb-1 font-serif">National Curriculum Tracking</h4>
           <div class="grid grid-cols-2 gap-2 text-xs mt-2">
-            <div class="bg-sky-50 p-2.5 rounded-xl border border-sky-200">
-              <span class="text-slate-500 block">Questions Solved</span>
-              <span id="statTotalSolved" class="text-lg font-black text-sky-800">0</span>
+            <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
+              <span class="text-slate-400 block">Questions Solved</span>
+              <span id="statTotalSolved" class="text-lg font-black text-amber-300">0</span>
             </div>
-            <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200">
-              <span class="text-slate-500 block">Accuracy Rate</span>
-              <span id="statAccuracy" class="text-lg font-black text-emerald-800">100%</span>
+            <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
+              <span class="text-slate-400 block">Overall Accuracy</span>
+              <span id="statAccuracy" class="text-lg font-black text-emerald-400">100%</span>
             </div>
           </div>
         </div>
-        <button type="button" onclick="closeParentGateModal()" class="bouncy-btn mt-3 w-full bg-slate-200 text-slate-700 font-black text-sm py-2 rounded-xl">Close</button>
+        <button type="button" onclick="closeParentGateModal()" class="bouncy-btn mt-3 w-full bg-slate-800 text-slate-300 font-bold text-sm py-2 rounded-xl">Close</button>
       </div>
     </div>
 
   </main>
 
-  <script>
-    /* =========================================================================
-       1. UK Education & Curriculum Dataset
-       ========================================================================= */
-
-    // British Phonics Progression Database
-    const PHONICS_DATA = [
-      // Phase 2
-      { sound: 's', example: 'sun', icon: '☀️', phase: 'Phase 2' },
-      { sound: 'a', example: 'ant', icon: '🐜', phase: 'Phase 2' },
-      { sound: 't', example: 'tap', icon: '🚰', phase: 'Phase 2' },
-      { sound: 'p', example: 'pig', icon: '🐷', phase: 'Phase 2' },
-      { sound: 'i', example: 'ink', icon: '🖋️', phase: 'Phase 2' },
-      { sound: 'n', example: 'nut', icon: '🥜', phase: 'Phase 2' },
-      // Phase 3 & 4 Digraphs
-      { sound: 'sh', example: 'ship', icon: '🚢', phase: 'Phase 3' },
-      { sound: 'ch', example: 'chin', icon: '🗣️', phase: 'Phase 3' },
-      { sound: 'th', example: 'thumb', icon: '👍', phase: 'Phase 3' },
-      { sound: 'ee', example: 'bee', icon: '🐝', phase: 'Phase 3' },
-      { sound: 'oa', example: 'boat', icon: '⛵', phase: 'Phase 3' },
-      { sound: 'ai', example: 'rain', icon: '🌧️', phase: 'Phase 3' }
-    ];
-
-    // British Currency
-    const UK_COINS = [
-      { val: 1, name: '1 penny (1p)', css: 'coin-1p', label: '1p', spoken: 'one penny' },
-      { val: 2, name: '2 pence (2p)', css: 'coin-2p', label: '2p', spoken: 'two pence' },
-      { val: 5, name: '5 pence (5p)', css: 'coin-5p', label: '5p', spoken: 'five pence' },
-      { val: 10, name: '10 pence (10p)', css: 'coin-10p', label: '10p', spoken: 'ten pence' },
-      { val: 20, name: '20 pence (20p)', css: 'coin-20p', label: '20p', spoken: 'twenty pence' },
-      { val: 100, name: 'One Pound (£1)', css: 'coin-pound', label: '£1', spoken: 'one pound' }
-    ];
-
-    // British Supermarket Items (£ / p)
-    const UK_STORE_ITEMS = [
-      { name: 'Organic Milk', icon: '🥛', price: 2 },
-      { name: 'Fresh Strawberries', icon: '🍓', price: 3 },
-      { name: 'English Teapot', icon: '🫖', price: 6 },
-      { name: 'Loaf of Bread', icon: '🍞', price: 1 },
-      { name: 'Cheddar Cheese', icon: '🧀', price: 4 },
-      { name: 'Royal Biscuits', icon: '🍪', price: 2 }
-    ];
-
-    // British Teacher Personas
-    const TEACHER_PROFILES = [
-      {
-        id: 'sophie',
-        name: 'Miss Sophie',
-        title: 'British Primary Teacher (RP / London)',
-        avatar: '🇬🇧',
-        lang: 'en-GB',
-        isFemale: true,
-        preferredNames: ['Hazel', 'Susan', 'Serena', 'Google UK English Female', 'Libby', 'Sonia'],
-        rate: 0.82,
-        pitch: 1.16,
-        intro: "Hello darling! I'm Miss Sophie. Welcome to our British classroom!"
-      },
-      {
-        id: 'george',
-        name: 'Mr. George',
-        title: 'British Storyteller & Tutor',
-        avatar: '🎩',
-        lang: 'en-GB',
-        isFemale: false,
-        preferredNames: ['George', 'Oliver', 'Google UK English Male'],
-        rate: 0.82,
-        pitch: 1.02,
-        intro: "Good day, young scholar! I'm Mr. George. Let's master Phonics and Maths!"
-      }
-    ];
-
-    // UK Curriculum Structure
-    const UK_CURRICULUM = {
-      toddler: {
-        icon: '🧸',
-        title: 'Toddler (Age 2-3)',
-        desc: 'Sensory awareness and early sounds',
-        topics: [
-          { id: 'toddler_sounds', title: 'Phase 1 Sound Explorer', subtitle: 'Animal & nature sounds', icon: '🐶', color: 'from-teal-400 to-emerald-500' },
-          { id: 'toddler_count', title: 'Count 1 to 3', subtitle: 'Early items', icon: '🍎', color: 'from-emerald-400 to-teal-600' }
-        ]
-      },
-      nursery: {
-        icon: '🌱',
-        title: 'Nursery (Age 3-4)',
-        desc: 'EYFS foundational sounds and numbers 1-5',
-        topics: [
-          { id: 'nursery_count', title: 'Count 1 to 5', subtitle: 'Count objects', icon: '🐰', color: 'from-emerald-400 to-teal-500' },
-          { id: 'nursery_phonics', title: 'Phonics Phase 1', subtitle: 'Rhyme & Initial Sounds', icon: '🔤', color: 'from-teal-400 to-cyan-500' }
-        ]
-      },
-      reception: {
-        icon: '🌸',
-        title: 'Reception (Age 4-5)',
-        desc: 'Phonics Phase 2 and Number Bonds',
-        topics: [
-          { id: 'rec_phonics', title: 'Phonics Phase 2', subtitle: 's, a, t, p, i, n blending', icon: '☀️', color: 'from-sky-400 to-blue-500' },
-          { id: 'rec_bonds', title: 'Ten-Frame Bonds', subtitle: 'Make number 10', icon: '🔟', color: 'from-amber-400 to-orange-500' }
-        ]
-      },
-      year1: {
-        icon: '⭐',
-        title: 'Year 1 (Age 5-6)',
-        desc: 'Digraphs, UK Coins and Addition to 20',
-        topics: [
-          { id: 'y1_digraphs', title: 'Digraphs (sh, ch, th)', subtitle: 'Phonics Phase 3 & 4', icon: '🚢', color: 'from-indigo-400 to-indigo-600' },
-          { id: 'y1_coins', title: 'British Coins', subtitle: 'Recognise 1p to £1', icon: '🪙', color: 'from-amber-400 to-yellow-600' }
-        ]
-      },
-      year2: {
-        icon: '🚀',
-        title: 'Year 2 (Age 6-7)',
-        desc: 'Times Tables (2, 5, 10) & Phase 5 Phonics',
-        topics: [
-          { id: 'y2_times', title: '2, 5, 10 Times Tables', subtitle: 'Multiplication basics', icon: '✖️', color: 'from-rose-400 to-pink-500' },
-          { id: 'y2_phonics5', title: 'Phonics Phase 5', subtitle: 'Alternative vowel digraphs', icon: '📖', color: 'from-sky-400 to-indigo-500' }
-        ]
-      },
-      year3: {
-        icon: '🏰',
-        title: 'Year 3 (Age 7-8)',
-        desc: 'UK Supermarket & 3, 4, 8 Times Tables',
-        topics: [
-          { id: 'y3_market', title: 'British Supermarket (£)', subtitle: 'Pounds checkout math', icon: '🛒', color: 'from-emerald-400 to-teal-600' },
-          { id: 'y3_times', title: '3, 4, 8 Times Tables', subtitle: 'KS2 multiplication', icon: '⚡', color: 'from-purple-400 to-indigo-600' }
-        ]
-      },
-      year4: {
-        icon: '⚔️',
-        title: 'Year 4 (Age 8-9)',
-        desc: 'Multiplication Check (up to 12×12)',
-        topics: [
-          { id: 'y4_tables', title: 'MTC Tables up to 12×12', subtitle: 'Rapid multiplication', icon: '🎯', color: 'from-purple-500 to-pink-600' }
-        ]
-      },
-      year5: {
-        icon: '👑',
-        title: 'Year 5 (Age 9-10)',
-        desc: 'Advanced reasoning, Prime numbers & Fractions',
-        topics: [
-          { id: 'y5_primes', title: 'Prime Numbers', subtitle: 'Identify primes up to 50', icon: '💎', color: 'from-fuchsia-500 to-rose-600' }
-        ]
-      }
-    };
-
-    /* =========================================================================
-       2. Audio & British Speech Synthesis
-       ========================================================================= */
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    let audioContext = null;
-    let isSoundOn = true;
-    let currentTeacherIndex = 0;
-
-    function unlockAudio() {
-      if (!audioContext) {
-        try { audioContext = new AudioContextClass(); } catch (e) {}
-      }
-      if (audioContext && audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-    }
-    document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
-    document.addEventListener('click', unlockAudio, { once: true });
-
-    function playTone(freq, type = 'sine', duration = 0.16, delay = 0, volume = 0.20) {
-      if (!isSoundOn) return;
-      unlockAudio();
-      if (!audioContext) return;
-      try {
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioContext.currentTime + delay);
-        gain.gain.setValueAtTime(0.001, audioContext.currentTime + delay);
-        gain.gain.exponentialRampToValueAtTime(volume, audioContext.currentTime + delay + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + delay + duration);
-        osc.connect(gain);
-        gain.connect(audioContext.destination);
-        osc.start(audioContext.currentTime + delay);
-        osc.stop(audioContext.currentTime + delay + duration);
-      } catch (e) {}
-    }
-
-    function soundSuccess() {
-      playTone(523.25, 'triangle', 0.14, 0, 0.22);
-      playTone(659.25, 'triangle', 0.14, 0.08, 0.22);
-      playTone(783.99, 'triangle', 0.18, 0.16, 0.22);
-      playTone(1046.50, 'triangle', 0.32, 0.24, 0.26);
-    }
-    function soundPop() { playTone(580 + Math.random() * 150, 'sine', 0.08, 0, 0.18); }
-    function soundEncourage() {
-      playTone(349.23, 'sine', 0.16, 0, 0.18);
-      playTone(311.13, 'sine', 0.22, 0.12, 0.18);
-    }
-
-    let cachedVoices = [];
-    function refreshVoices() {
-      if ('speechSynthesis' in window) cachedVoices = window.speechSynthesis.getVoices();
-    }
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = refreshVoices;
-      refreshVoices();
-    }
-
-    function speakBritishEnglish(text) {
-      if (!isSoundOn || !('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-
-      const profile = TEACHER_PROFILES[currentTeacherIndex];
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = profile.lang;
-      utter.rate = profile.rate;
-      utter.pitch = profile.pitch;
-
-      if (!cachedVoices.length) refreshVoices();
-      const ukVoices = cachedVoices.filter(v => v.lang.toLowerCase().includes('gb') || v.lang.toLowerCase().includes('uk'));
-      if (ukVoices.length > 0) {
-        utter.voice = ukVoices[0];
-      }
-      window.speechSynthesis.speak(utter);
-    }
-
-    /* =========================================================================
-       3. Game Core Engine
-       ========================================================================= */
-    let currentGrade = 'reception';
-    let currentMode = 'rec_phonics';
-    let activePromptSpeech = '';
-    let targetAnswer = null;
-    let isInputLocked = false;
-    let totalQuestions = 0;
-    let correctCount = 0;
-    let currentStars = 0;
-    let currentPhonicsItem = null;
-
-    function safeSetText(id, text) {
-      const el = document.getElementById(id);
-      if (el) el.innerText = text;
-    }
-    function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-    function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-
-    window.selectGrade = function(gradeKey) {
-      soundPop();
-      currentGrade = gradeKey;
-      const cfg = UK_CURRICULUM[gradeKey];
-      safeSetText('activeGradePillIcon', cfg.icon);
-      safeSetText('activeGradePillText', cfg.title.split(' ')[0]);
-      renderGradeLobby();
-    };
-
-    function renderGradeLobby() {
-      const cfg = UK_CURRICULUM[currentGrade];
-      safeSetText('lobbyBadge', `${cfg.icon} ${cfg.title}`);
-      safeSetText('lobbyTitle', `${cfg.title} Learning Path`);
-      safeSetText('lobbySubtitle', cfg.desc);
-
-      const container = document.getElementById('lobbyCardsContainer');
-      container.innerHTML = '';
-      cfg.topics.forEach(topic => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'bouncy-btn clay-card p-4 sm:p-5 flex flex-col items-center text-center cursor-pointer border-b-6 hover:scale-102 transition-all';
-        btn.innerHTML = `
-          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr ${topic.color} text-white flex items-center justify-center text-3xl mb-2.5 shadow-md">
-            ${topic.icon}
-          </div>
-          <h3 class="text-base font-black text-slate-800">${topic.title}</h3>
-          <span class="text-[11px] font-bold text-slate-500 mt-0.5">${topic.subtitle}</span>
-          <span class="text-xs font-black text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full mt-2">Enter Mission ▶</span>
-        `;
-        btn.onclick = () => launchTopic(topic.id);
-        container.appendChild(btn);
-      });
-
-      document.getElementById('curriculumPortalScreen').style.display = 'none';
-      document.getElementById('gamePlayScreen').style.display = 'none';
-      document.getElementById('gradeLobbyScreen').style.display = 'flex';
-    }
-
-    window.launchTopic = function(topicId) {
-      soundPop();
-      currentMode = topicId;
-      document.getElementById('gradeLobbyScreen').style.display = 'none';
-      document.getElementById('gamePlayScreen').style.display = 'flex';
-      safeSetText('navBackLabel', "Menu");
-      safeSetText('navBackIcon', "🔙");
-      generateQuestion();
-    };
-
-    window.handleNavigationBack = function() {
-      soundPop();
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      const play = document.getElementById('gamePlayScreen');
-      const lobby = document.getElementById('gradeLobbyScreen');
-      const portal = document.getElementById('curriculumPortalScreen');
-
-      if (play.style.display !== 'none') {
-        play.style.display = 'none';
-        lobby.style.display = 'flex';
-      } else if (lobby.style.display !== 'none') {
-        lobby.style.display = 'none';
-        portal.style.display = 'flex';
-        safeSetText('navBackLabel', "Curriculum");
-        safeSetText('navBackIcon', "🏛️");
-      }
-    };
-
-    function hideAllStages() {
-      ['stagePhonics', 'stageEarlyCount', 'stageTenFrame', 'stageUkCoins', 'stageTimesTables', 'stageUkMarket'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-      });
-      document.getElementById('numberOptionsRow').innerHTML = '';
-      isInputLocked = false;
-    }
-
-    function generateQuestion() {
-      hideAllStages();
-
-      switch (currentMode) {
-        case 'toddler_sounds':
-        case 'nursery_phonics':
-        case 'rec_phonics':
-        case 'y1_digraphs':
-        case 'y2_phonics5':
-          renderPhonicsQuestion();
-          break;
-        case 'toddler_count':
-        case 'nursery_count':
-          renderEarlyCountQuestion();
-          break;
-        case 'rec_bonds':
-          renderTenFrameQuestion();
-          break;
-        case 'y1_coins':
-          renderUkCoinQuestion();
-          break;
-        case 'y2_times':
-        case 'y3_times':
-        case 'y4_tables':
-          renderTimesTableQuestion();
-          break;
-        case 'y3_market':
-          renderUkMarketQuestion();
-          break;
-        case 'y5_primes':
-          renderPrimeQuestion();
-          break;
-        default:
-          renderPhonicsQuestion();
-      }
-
-      speakBritishEnglish(activePromptSpeech);
-    }
-
-    /* Questions Handlers */
-    function renderPhonicsQuestion() {
-      const stage = document.getElementById('stagePhonics');
-      stage.style.display = 'flex';
-
-      currentPhonicsItem = getRandomItem(PHONICS_DATA);
-      targetAnswer = currentPhonicsItem.sound;
-
-      safeSetText('missionBadgeText', `${currentPhonicsItem.phase}: Sound Challenge`);
-      safeSetText('promptTitle', `Find the matching sound!`);
-      safeSetText('promptSubtitle', `Listen: Can you find the sound /${currentPhonicsItem.sound}/?`);
-      activePromptSpeech = `Can you find the sound: ${currentPhonicsItem.sound}? Like in ${currentPhonicsItem.example}!`;
-
-      safeSetText('phonicsTargetDisplay', currentPhonicsItem.icon);
-      safeSetText('phonicsHintWord', `Word: ${currentPhonicsItem.example}`);
-
-      const choices = [targetAnswer];
-      while (choices.length < 4) {
-        const randomP = getRandomItem(PHONICS_DATA).sound;
-        if (!choices.includes(randomP)) choices.push(randomP);
-      }
-      renderChoiceButtons(choices.sort());
-    }
-
-    window.speakTargetPhonicsSound = function() {
-      soundPop();
-      if (currentPhonicsItem) {
-        speakBritishEnglish(`The sound is: ${currentPhonicsItem.sound}, as in ${currentPhonicsItem.example}!`);
-      }
-    };
-
-    function renderEarlyCountQuestion() {
-      const stage = document.getElementById('stageEarlyCount');
-      stage.style.display = 'flex';
-
-      const max = currentMode === 'toddler_count' ? 3 : 5;
-      const count = getRandomInt(1, max);
-      targetAnswer = count;
-
-      safeSetText('missionBadgeText', `EYFS Counting`);
-      safeSetText('promptTitle', `Count the items!`);
-      safeSetText('promptSubtitle', `How many items are there on the screen?`);
-      activePromptSpeech = `Let's count! How many are there on the screen?`;
-
-      const grid = document.getElementById('earlyCountGrid');
-      grid.innerHTML = '';
-      for (let i = 0; i < count; i++) {
-        const item = document.createElement('div');
-        item.className = 'text-6xl p-2 cursor-pointer pop-in';
-        item.innerText = '🍎';
-        item.onclick = () => { soundPop(); speakBritishEnglish(String(i + 1)); };
-        grid.appendChild(item);
-      }
-
-      renderChoiceButtons([1, 2, 3, 4, 5].slice(0, 4));
-    }
-
-    function renderTenFrameQuestion() {
-      const stage = document.getElementById('stageTenFrame');
-      stage.style.display = 'flex';
-
-      const given = getRandomInt(1, 9);
-      targetAnswer = 10 - given;
-
-      safeSetText('missionBadgeText', `Reception: Number Bonds to 10`);
-      safeSetText('promptTitle', `Ten-Frame: Make 10!`);
-      safeSetText('promptSubtitle', `${given} plus what makes 10?`);
-      activePromptSpeech = `${given} plus what makes 10? Fill the ten frame!`;
-
-      safeSetText('tenFrameGiven', given);
-      const grid = document.getElementById('tenFrameGrid');
-      grid.innerHTML = '';
-      for (let i = 0; i < 10; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'w-10 h-10 rounded-xl flex items-center justify-center border-2 border-amber-200';
-        cell.innerHTML = i < given ? '<span class="text-amber-500 font-black text-2xl">●</span>' : '<span class="text-slate-300">○</span>';
-        grid.appendChild(cell);
-      }
-
-      renderChoiceButtons([targetAnswer, (targetAnswer+2)%9+1, (targetAnswer+4)%9+1, (targetAnswer+5)%9+1].sort((a,b)=>a-b));
-    }
-
-    function renderUkCoinQuestion() {
-      const stage = document.getElementById('stageUkCoins');
-      stage.style.display = 'flex';
-
-      const coin = getRandomItem(UK_COINS);
-      targetAnswer = coin.name;
-
-      safeSetText('missionBadgeText', `KS1: British Coins`);
-      safeSetText('promptTitle', `Identify the British Coin!`);
-      safeSetText('promptSubtitle', `Which coin is shown in the box?`);
-      activePromptSpeech = `Look at the British coin. Is it ${coin.spoken}?`;
-
-      document.getElementById('ukCoinTargetBox').innerHTML = `
-        <div class="uk-coin ${coin.css}">
-          <span class="text-base">${coin.label}</span>
-        </div>
-      `;
-
-      const choices = [targetAnswer];
-      while (choices.length < 4) {
-        const cand = getRandomItem(UK_COINS).name;
-        if (!choices.includes(cand)) choices.push(cand);
-      }
-      renderChoiceButtons(choices.sort());
-    }
-
-    function renderTimesTableQuestion() {
-      const stage = document.getElementById('stageTimesTables');
-      stage.style.display = 'flex';
-
-      let a = 2, b = getRandomInt(1, 12);
-      if (currentMode === 'y2_times') a = getRandomItem([2, 5, 10]);
-      else if (currentMode === 'y3_times') a = getRandomItem([3, 4, 8]);
-      else a = getRandomInt(2, 12);
-
-      targetAnswer = a * b;
-      safeSetText('missionBadgeText', `Times Tables Mastery`);
-      safeSetText('promptTitle', `Multiplication Challenge`);
-      safeSetText('promptSubtitle', `Calculate: ${a} × ${b}`);
-      activePromptSpeech = `What is ${a} times ${b}?`;
-
-      safeSetText('timesTableA', a);
-      safeSetText('timesTableB', b);
-
-      const choices = [targetAnswer];
-      while (choices.length < 4) {
-        const c = targetAnswer + getRandomInt(-10, 10);
-        if (c > 0 && !choices.includes(c)) choices.push(c);
-      }
-      renderChoiceButtons(choices.sort((x,y)=>x-y));
-    }
-
-    function renderUkMarketQuestion() {
-      const stage = document.getElementById('stageUkMarket');
-      stage.style.display = 'flex';
-
-      const items = [getRandomItem(UK_STORE_ITEMS), getRandomItem(UK_STORE_ITEMS)];
-      targetAnswer = `£${items[0].price + items[1].price}`;
-
-      safeSetText('missionBadgeText', `Year 3: British Pound (£)`);
-      safeSetText('promptTitle', `Supermarket Checkout`);
-      safeSetText('promptSubtitle', `Find the total cost in British Pounds!`);
-      activePromptSpeech = `Let's add the items in the basket. What is the total in pounds?`;
-
-      const list = document.getElementById('ukMarketItemList');
-      list.innerHTML = items.map(it => `
-        <div class="flex items-center justify-between bg-white px-3 py-1.5 rounded-xl border border-amber-200 text-xs">
-          <span>${it.icon} ${it.name}</span>
-          <span class="font-extrabold text-amber-900">£${it.price}</span>
-        </div>
-      `).join('');
-
-      safeSetText('ukMarketEquation', `£${items[0].price} + £${items[1].price} = ?`);
-
-      const totalVal = items[0].price + items[1].price;
-      const choices = [targetAnswer, `£${totalVal + 1}`, `£${Math.max(1, totalVal - 2)}`, `£${totalVal + 3}`];
-      renderChoiceButtons(choices.sort());
-    }
-
-    function renderPrimeQuestion() {
-      const stage = document.getElementById('stageTimesTables');
-      stage.style.display = 'flex';
-
-      const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31];
-      const nonPrimes = [4, 6, 8, 9, 10, 12, 14, 15, 16, 20, 21];
-
-      targetAnswer = getRandomItem(primes);
-      safeSetText('missionBadgeText', `Year 5: Prime Numbers`);
-      safeSetText('promptTitle', `Find the Prime Number!`);
-      safeSetText('promptSubtitle', `Which of the following is a prime number?`);
-      activePromptSpeech = `Can you spot the prime number? Remember, primes have only two factors: one and itself!`;
-
-      safeSetText('timesTableA', 'Prime');
-      safeSetText('timesTableB', 'Number');
-
-      const choices = [targetAnswer];
-      while (choices.length < 4) {
-        const c = getRandomItem(nonPrimes);
-        if (!choices.includes(c)) choices.push(c);
-      }
-      renderChoiceButtons(choices.sort((a,b)=>a-b));
-    }
-
-    function renderChoiceButtons(options) {
-      const row = document.getElementById('numberOptionsRow');
-      row.innerHTML = '';
-      const palettes = [
-        'from-amber-400 to-amber-500 border-amber-600 text-amber-950',
-        'from-sky-400 to-sky-500 border-sky-600 text-sky-950',
-        'from-emerald-400 to-emerald-500 border-emerald-600 text-emerald-950',
-        'from-pink-400 to-rose-500 border-rose-600 text-rose-950'
-      ];
-
-      options.forEach((val, idx) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `bouncy-btn bg-gradient-to-b ${palettes[idx % palettes.length]} border-b-6 px-5 py-3 rounded-2xl text-lg sm:text-xl font-black min-w-[80px] shadow-md`;
-        btn.innerText = val;
-        btn.onclick = () => {
-          if (isInputLocked) return;
-          if (String(val) === String(targetAnswer)) onAnswerCorrect(); else onAnswerWrong();
-        };
-        row.appendChild(btn);
-      });
-    }
-
-    function onAnswerCorrect() {
-      isInputLocked = true;
-      soundSuccess();
-      speakBritishEnglish("Brilliant! Well done!");
-      totalQuestions++;
-      correctCount++;
-      currentStars++;
-      safeSetText('headerStars', currentStars);
-      if (typeof confetti === 'function') confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
-      safeSetText('promptTitle', 'Splendid! You got it right! ⭐');
-      setTimeout(generateQuestion, 1400);
-    }
-
-    function onAnswerWrong() {
-      soundEncourage();
-      speakBritishEnglish("Nearly! Try once more!");
-      safeSetText('promptTitle', 'Nearly! Try again! 💪');
-      const b = document.getElementById('promptDisplayBanner');
-      b.classList.add('animate-wiggle');
-      setTimeout(() => b.classList.remove('animate-wiggle'), 400);
-    }
-
-    window.speakCurrentQuestionPrompt = function() {
-      soundPop();
-      if (activePromptSpeech) speakBritishEnglish(activePromptSpeech);
-    };
-
-    /* Badges & Modals */
-    const BADGES = ['👑 Crown', '🦁 Lion', '🦄 Unicorn', '🏰 Castle', '🫖 Teapot', '🛡️ Knight'];
-    window.openStickerModal = function() {
-      soundPop();
-      const grid = document.getElementById('badgeGridContainer');
-      grid.innerHTML = BADGES.map(b => `
-        <div class="clay-card p-2.5 flex flex-col items-center justify-center text-center">
-          <span class="text-3xl">${b.split(' ')[0]}</span>
-          <span class="text-[10px] font-black mt-1">${b.split(' ')[1]}</span>
-        </div>
-      `).join('');
-      document.getElementById('stickerAlbumModal').style.display = 'flex';
-    };
-    window.closeStickerModal = function() {
-      soundPop();
-      document.getElementById('stickerAlbumModal').style.display = 'none';
-    };
-
-    window.openTeacherVoiceModal = function() {
-      soundPop();
-      const list = document.getElementById('teacherCardsList');
-      list.innerHTML = TEACHER_PROFILES.map((t, idx) => `
-        <div onclick="selectTeacher(${idx})" class="p-3 rounded-2xl border-2 flex items-center justify-between cursor-pointer ${idx === currentTeacherIndex ? 'bg-indigo-50 border-indigo-500' : 'bg-slate-50 border-slate-200'}">
-          <div class="flex items-center gap-3 text-left">
-            <span class="text-3xl">${t.avatar}</span>
-            <div>
-              <div class="text-sm font-black text-slate-800">${t.name}</div>
-              <div class="text-[11px] font-bold text-slate-500">${t.title}</div>
-            </div>
-          </div>
-          <span class="text-xs font-bold text-indigo-600">${idx === currentTeacherIndex ? 'Active' : 'Choose'}</span>
-        </div>
-      `).join('');
-      document.getElementById('teacherVoiceModal').style.display = 'flex';
-    };
-    window.selectTeacher = function(idx) {
-      currentTeacherIndex = idx;
-      safeSetText('currentTeacherAvatar', TEACHER_PROFILES[idx].avatar);
-      safeSetText('currentTeacherNamePill', TEACHER_PROFILES[idx].name);
-      speakBritishEnglish(TEACHER_PROFILES[idx].intro);
-      openTeacherVoiceModal();
-    };
-    window.closeTeacherVoiceModal = function() {
-      soundPop();
-      document.getElementById('teacherVoiceModal').style.display = 'none';
-    };
-
-    window.toggleAudioMute = function() {
-      isSoundOn = !isSoundOn;
-      safeSetText('audioMuteIcon', isSoundOn ? '🔊' : '🔇');
-      safeSetText('audioMuteLabel', isSoundOn ? 'Audio' : 'Muted');
-      if (!isSoundOn && 'speechSynthesis' in window) window.speechSynthesis.cancel();
-      soundPop();
-    };
-
-    let parentPass = 56;
-    window.openParentGate = function() {
-      soundPop();
-      document.getElementById('parentGateModal').style.display = 'flex';
-    };
-    window.verifyParentPass = function() {
-      const val = parseInt(document.getElementById('parentLockInput').value, 10);
-      if (val === 56) {
-        soundSuccess();
-        document.getElementById('parentLockChallenge').style.display = 'none';
-        document.getElementById('parentDashboardReport').style.display = 'block';
-        safeSetText('statTotalSolved', totalQuestions);
-        safeSetText('statAccuracy', totalQuestions > 0 ? `${Math.round((correctCount / totalQuestions) * 100)}%` : '100%');
-      } else {
-        soundEncourage();
-      }
-    };
-    window.closeParentGateModal = function() {
-      soundPop();
-      document.getElementById('parentGateModal').style.display = 'none';
-    };
-  </script>
+  <!-- Modular Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
 </body>
 </html>
