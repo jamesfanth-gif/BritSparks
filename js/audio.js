@@ -1,18 +1,17 @@
 /* =========================================================================
-   BritSparks - Dedicated Speech Synthesis & Royal Sound Engine (iOS Fix)
+   BritSparks - Dedicated Speech Synthesis & Royal Sound Engine (Fixed)
    ========================================================================= */
 
 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
 let audioContext = null;
 let isSoundOn = true;
-let currentTeacherIndex = 0; // 預設 Lady Victoria (女聲)
+let currentTeacherIndex = 0;
 
 function ensureAudio() {
   if (!audioContext) audioContext = new AudioContextClass();
   if (audioContext.state === 'suspended') audioContext.resume();
 }
 
-// 柔和合成音效
 function playTone(freq, type = 'sine', duration = 0.16, delay = 0, volume = 0.20) {
   if (!isSoundOn) return;
   ensureAudio();
@@ -55,7 +54,7 @@ function soundEncourageTone() {
 }
 
 /* =========================================================================
-   Web Speech API - 嚴格過濾 British Female（修復 iOS 自然聲線）
+   Web Speech API - 嚴格過濾發音與性別
    ========================================================================= */
 let cachedVoices = [];
 
@@ -74,18 +73,17 @@ function getOptimalVoice(teacher) {
   const voices = cachedVoices;
   if (!voices.length) return null;
 
-  // 1. 篩選英國發音 (en-GB / en_UK)
-  const ukVoices = voices.filter(v => v.lang && (v.lang.toLowerCase().includes('gb') || v.lang.toLowerCase().includes('uk')));
-  const targetPool = ukVoices.length > 0 ? ukVoices : voices.filter(v => v.lang.toLowerCase().startsWith('en'));
+  // 強制只找英文語音包，嚴禁 fallback 到中文/廣東話語音包
+  const englishVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+  const ukVoices = englishVoices.filter(v => v.lang.toLowerCase().includes('gb') || v.lang.toLowerCase().includes('uk'));
+  const targetPool = ukVoices.length > 0 ? ukVoices : englishVoices;
 
-  // 2. 精準名稱匹配 (包含 iOS 專用女聲 Stephanie, Martha, Siri, Victoria)
   for (const pName of teacher.preferredNames) {
     const found = targetPool.find(v => v.name.toLowerCase().includes(pName.toLowerCase()));
     if (found) return found;
   }
 
-  // 3. 避免男聲與女聲混淆
-  const maleKeywords = ['male', 'david', 'george', 'daniel', 'oliver', 'mark', 'james', 'arthur'];
+  const maleKeywords = ['male', 'david', 'george', 'daniel', 'oliver', 'mark', 'james', 'arthur', 'rishi'];
   if (teacher.isFemale) {
     const femaleVoice = targetPool.find(v => !maleKeywords.some(m => v.name.toLowerCase().includes(m)));
     if (femaleVoice) return femaleVoice;
@@ -101,15 +99,14 @@ function speakBritishEnglish(text, onEndCallback = null) {
   if (!isSoundOn || !('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
 
-  // 清理 emoji 防止朗讀時發出奇怪聲音
+  // 清除特殊字符，確保朗讀流暢
   const clean = text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
   if (!clean) return;
 
   const teacher = TEACHER_PROFILES[currentTeacherIndex];
   const utter = new SpeechSynthesisUtterance(clean);
-  utter.lang = teacher.lang || 'en-GB';
+  utter.lang = 'en-GB'; // 確保為英倫發音
   utter.rate = teacher.rate || 0.76;
-  // 保持基準 Pitch 1.0，防止 iOS 算法變調失真產生機械音
   utter.pitch = teacher.pitch || 1.0;
 
   const matched = getOptimalVoice(teacher);
@@ -122,9 +119,9 @@ function speakBritishEnglish(text, onEndCallback = null) {
 function speakPraise() {
   const praises = [
     "Splendid! That is correct!",
-    "Brilliant work, my dear!",
-    "Marvellous! Exactly right!",
-    "First class! Keep it up!",
+    "Brilliant work, young scholar!",
+    "Marvellous! Spot on!",
+    "First class! Jolly good job!",
     "Splendidly done! High five!"
   ];
   speakBritishEnglish(praises[Math.floor(Math.random() * praises.length)]);
@@ -133,8 +130,8 @@ function speakPraise() {
 function speakTryAgain() {
   const encouragements = [
     "Ever so close! Give it another try!",
-    "Not quite, darling. Let's look again!",
-    "Try once more, young scholar!"
+    "Not quite, darling. Let's check once more!",
+    "Have another go, you can do it!"
   ];
   speakBritishEnglish(encouragements[Math.floor(Math.random() * encouragements.length)]);
 }
