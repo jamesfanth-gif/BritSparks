@@ -1,5 +1,5 @@
 /* =========================================================================
-   BritSparks - Dedicated Speech Synthesis & Royal Sound Engine
+   BritSparks - Dedicated Speech Synthesis & Royal Sound Engine (iOS Fix)
    ========================================================================= */
 
 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -55,7 +55,7 @@ function soundEncourageTone() {
 }
 
 /* =========================================================================
-   Web Speech API - 嚴格過濾 British Female（保證英式女聲不丟失）
+   Web Speech API - 嚴格過濾 British Female（修復 iOS 自然聲線）
    ========================================================================= */
 let cachedVoices = [];
 
@@ -78,14 +78,14 @@ function getOptimalVoice(teacher) {
   const ukVoices = voices.filter(v => v.lang && (v.lang.toLowerCase().includes('gb') || v.lang.toLowerCase().includes('uk')));
   const targetPool = ukVoices.length > 0 ? ukVoices : voices.filter(v => v.lang.toLowerCase().startsWith('en'));
 
-  // 2. 匹配指定名稱
+  // 2. 精準名稱匹配 (包含 iOS 專用女聲 Stephanie, Martha, Siri, Victoria)
   for (const pName of teacher.preferredNames) {
     const found = targetPool.find(v => v.name.toLowerCase().includes(pName.toLowerCase()));
     if (found) return found;
   }
 
-  // 3. 確保性別正確（如果指定為女聲，徹底避開 male/david/george/daniel）
-  const maleKeywords = ['male', 'david', 'george', 'daniel', 'oliver', 'mark', 'james'];
+  // 3. 避免男聲與女聲混淆
+  const maleKeywords = ['male', 'david', 'george', 'daniel', 'oliver', 'mark', 'james', 'arthur'];
   if (teacher.isFemale) {
     const femaleVoice = targetPool.find(v => !maleKeywords.some(m => v.name.toLowerCase().includes(m)));
     if (femaleVoice) return femaleVoice;
@@ -101,15 +101,16 @@ function speakBritishEnglish(text, onEndCallback = null) {
   if (!isSoundOn || !('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
 
-  // 清除 emoji 與特殊標點，避免朗讀雜音
+  // 清理 emoji 防止朗讀時發出奇怪聲音
   const clean = text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
   if (!clean) return;
 
   const teacher = TEACHER_PROFILES[currentTeacherIndex];
   const utter = new SpeechSynthesisUtterance(clean);
-  utter.lang = teacher.lang;
-  utter.rate = teacher.rate; // 保持 0.74 溫柔慢速
-  utter.pitch = teacher.pitch;
+  utter.lang = teacher.lang || 'en-GB';
+  utter.rate = teacher.rate || 0.76;
+  // 保持基準 Pitch 1.0，防止 iOS 算法變調失真產生機械音
+  utter.pitch = teacher.pitch || 1.0;
 
   const matched = getOptimalVoice(teacher);
   if (matched) utter.voice = matched;
