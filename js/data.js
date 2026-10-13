@@ -2,22 +2,22 @@
    BritSparks - British Curriculum & Royal Treasury Database
    ========================================================================= */
 
-// 1. Phonics Letters and Sounds Progression (Phases 1-5)
+// 1. Phonics Letters and Sounds Progression - 帶自然拼讀真實發音口訣
 const PHONICS_DATA = [
   // Phase 2
-  { sound: 's', example: 'sun', icon: '☀️', phase: 'Phase 2' },
-  { sound: 'a', example: 'ant', icon: '🐜', phase: 'Phase 2' },
-  { sound: 't', example: 'tap', icon: '🚰', phase: 'Phase 2' },
-  { sound: 'p', example: 'pan', icon: '🍳', phase: 'Phase 2' },
-  { sound: 'i', example: 'ink', icon: '🖋️', phase: 'Phase 2' },
-  { sound: 'n', example: 'net', icon: '🥅', phase: 'Phase 2' },
-  // Phase 3 & 4 Digraphs
-  { sound: 'sh', example: 'ship', icon: '🚢', phase: 'Phase 3' },
-  { sound: 'ch', example: 'chin', icon: '🗣️', phase: 'Phase 3' },
-  { sound: 'th', example: 'thumb', icon: '👍', phase: 'Phase 3' },
-  { sound: 'ee', example: 'queen', icon: '👑', phase: 'Phase 3' },
-  { sound: 'oa', example: 'boat', icon: '⛵', phase: 'Phase 3' },
-  { sound: 'ai', example: 'rain', icon: '🌧️', phase: 'Phase 3' }
+  { sound: 's', example: 'sun', icon: '☀️', phase: 'Phase 2', spokenPhonic: 'ssss, like in sun!' },
+  { sound: 'a', example: 'ant', icon: '🐜', phase: 'Phase 2', spokenPhonic: 'ah, like in ant!' },
+  { sound: 't', example: 'tap', icon: '🚰', phase: 'Phase 2', spokenPhonic: 't, t, like in tap!' },
+  { sound: 'p', example: 'pan', icon: '🍳', phase: 'Phase 2', spokenPhonic: 'p, p, like in pan!' },
+  { sound: 'i', example: 'ink', icon: '🖋️', phase: 'Phase 2', spokenPhonic: 'ih, like in ink!' },
+  { sound: 'n', example: 'net', icon: '🥅', phase: 'Phase 2', spokenPhonic: 'nnn, like in net!' },
+  // Phase 3 & 4 Digraphs (雙字母自然拼讀 - 徹底解決字母名念法)
+  { sound: 'sh', example: 'ship', icon: '🚢', phase: 'Phase 3', spokenPhonic: 'shhh! Like in ship and shoe!' },
+  { sound: 'ch', example: 'chin', icon: '🗣️', phase: 'Phase 3', spokenPhonic: 'ch, ch! Like in chin and chair!' },
+  { sound: 'th', example: 'thumb', icon: '👍', phase: 'Phase 3', spokenPhonic: 'th, th! Like in thumb and three!' },
+  { sound: 'ee', example: 'queen', icon: '👑', phase: 'Phase 3', spokenPhonic: 'long eee! Like in queen and bee!' },
+  { sound: 'oa', example: 'boat', icon: '⛵', phase: 'Phase 3', spokenPhonic: 'oh-ah sound, oh! Like in boat and coat!' },
+  { sound: 'ai', example: 'rain', icon: '🌧️', phase: 'Phase 3', spokenPhonic: 'long ay sound! Like in rain and train!' }
 ];
 
 // 2. Royal Mascot Themes
@@ -66,7 +66,7 @@ const ROYAL_HONOURS = [
   { id: 'h12', icon: '💎', name: 'Crown Jewel', desc: "The pinnacle of our realm! A supreme Royal Genius!" }
 ];
 
-// 6. British Governess & Teachers (Pitch 統一保持 1.0，適配 iOS 原生自然發音)
+// 6. British Governess & Teachers (全新 2 女 + 2 男 皇室導師陣容)
 const TEACHER_PROFILES = [
   {
     id: 'victoria',
@@ -75,22 +75,22 @@ const TEACHER_PROFILES = [
     avatar: '👑',
     lang: 'en-GB',
     isFemale: true,
-    preferredNames: ['Stephanie', 'Martha', 'Moira', 'Karen', 'Serena', 'Google UK English Female', 'Libby', 'Victoria'],
-    rate: 0.76,
-    pitch: 1.00, // 修正：iOS 保持 1.0 絕不破音
-    intro: "Welcome to the Royal Academy, my dear! I am Lady Victoria. Let us learn together!"
+    preferredNames: ['Stephanie', 'Martha', 'Serena', 'Google UK English Female', 'Libby'],
+    rate: 0.75,
+    pitch: 1.00,
+    intro: "Welcome to the Royal Academy! I am Lady Victoria. Let us learn together!"
   },
   {
-    id: 'catherine',
-    name: 'Miss Catherine',
-    title: 'Primary School Mistress',
+    id: 'emma',
+    name: 'Miss Emma',
+    title: 'Friendly Primary Tutor (Sweet Accent)',
     avatar: '🌸',
     lang: 'en-GB',
     isFemale: true,
-    preferredNames: ['Hazel', 'Susan', 'Google UK English Female', 'Libby', 'Female'],
-    rate: 0.76,
-    pitch: 1.00, // 修正：避免金屬電音
-    intro: "Good day, little scholar! I am Miss Catherine. You are doing ever so well!"
+    preferredNames: ['Hazel', 'Susan', 'Moira', 'Google UK English Female', 'Female'],
+    rate: 0.77,
+    pitch: 1.02,
+    intro: "Hello sweet scholar! I am Miss Emma. Let's play and count!"
   },
   {
     id: 'george',
@@ -101,12 +101,24 @@ const TEACHER_PROFILES = [
     isFemale: false,
     preferredNames: ['George', 'Oliver', 'Google UK English Male', 'Arthur', 'Male'],
     rate: 0.76,
-    pitch: 1.00,
+    pitch: 0.98,
     intro: "Good day! I am Master George. Ready for our mathematics and phonics quests?"
+  },
+  {
+    id: 'arthur',
+    name: 'Captain Arthur',
+    title: 'Royal Guard Commander (Energetic Voice)',
+    avatar: '💂',
+    lang: 'en-GB',
+    isFemale: false,
+    preferredNames: ['Daniel', 'David', 'James', 'Google UK English Male'],
+    rate: 0.78,
+    pitch: 0.96,
+    intro: "Halt! Royal explorer on deck! I am Captain Arthur. Let's conquer these missions!"
   }
 ];
 
-// 7. Full UK Curriculum Framework (2歲至10歲，每個等級具備 3-4 個精緻遊戲)
+// 7. Full UK Curriculum Framework (2歲至10歲，每個等級具備 3-4 個遊戲)
 const UK_CURRICULUM = {
   toddler: {
     icon: '🧸',
@@ -139,7 +151,7 @@ const UK_CURRICULUM = {
       { id: 'rec_phonics', title: 'Phase 2 Phonics', subtitle: 's, a, t, p, i, n blending', icon: '☀️', color: 'from-sky-500 to-blue-700' },
       { id: 'rec_bonds', title: 'Ten-Frame Bonds', subtitle: 'Make number 10', icon: '🔟', color: 'from-amber-500 to-orange-700' },
       { id: 'rec_compare', title: 'More or Less?', subtitle: 'Compare quantities', icon: '⚖️', color: 'from-emerald-500 to-teal-700' },
-      { id: 'rec_sub', title: 'Take Away Subtraction', subtitle: 'Visual take-away math', icon: '✂️', color: 'from-rose-500 to-pink-700' }
+      { id: 'rec_sub', title: 'Take Away Subtraction', subtitle: 'Interactive take-away', icon: '✂️', color: 'from-rose-500 to-pink-700' }
     ]
   },
   year1: {
@@ -150,7 +162,7 @@ const UK_CURRICULUM = {
     topics: [
       { id: 'y1_digraphs', title: 'Digraphs (sh, ch, th)', subtitle: 'Phase 3 & 4 reading', icon: '🚢', color: 'from-indigo-600 to-purple-800' },
       { id: 'y1_coins', title: 'British Coins', subtitle: '1p, 2p, 5p, 10p, £1', icon: '🪙', color: 'from-amber-500 to-yellow-600' },
-      { id: 'y1_math20', title: 'Maths within 20', subtitle: 'Addition & Subtraction', icon: '⚡', color: 'from-rose-600 to-red-700' },
+      { id: 'y1_math20', title: 'Maths within 20', subtitle: 'Addition to 20', icon: '⚡', color: 'from-rose-600 to-red-700' },
       { id: 'y1_clock', title: "Telling the Time", subtitle: "o'clock & half past", icon: '⏰', color: 'from-sky-600 to-cyan-700' }
     ]
   },
