@@ -1,0 +1,167 @@
+/* =========================================================================
+   BritSparks - Royal British Theme Stylesheet
+   ========================================================================= */
+
+:root {
+  --app-font: 'Quicksand', 'Fredoka', sans-serif;
+  --royal-serif: 'Cinzel', serif;
+}
+
+* {
+  font-family: var(--app-font);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  /* 英國皇室經典 Navy Blue 與 Crimson 深邃背景 */
+  background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 40%, #090d16 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  color: #f8fafc;
+}
+
+.royal-title {
+  font-family: var(--royal-serif);
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(251, 191, 36, 0.45);
+}
+
+/* 皇室質感深色卡片 + 金邊 */
+.royal-card {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(16px);
+  border: 2px solid rgba(251, 191, 36, 0.65);
+  box-shadow: 0 18px 36px -10px rgba(0, 0, 0, 0.6), inset 0 1px 3px rgba(251, 191, 36, 0.3);
+  border-radius: 24px;
+}
+
+/* 皇室金箔按鈕 */
+.royal-gold-btn {
+  background: linear-gradient(135deg, #fde047 0%, #eab308 50%, #ca8a04 100%);
+  box-shadow: 0 5px 0 #854d0e, 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.unified-nav-btn {
+  height: 38px;
+  min-height: 38px;
+  min-width: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border-radius: 14px;
+  font-size: 13px;
+  gap: 5px;
+  border-bottom-width: 3px;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .unified-nav-btn {
+    height: 42px;
+    min-height: 42px;
+    min-width: 42px;
+    padding: 0 14px;
+    font-size: 14px;
+    border-bottom-width: 4px;
+  }
+}
+
+.bouncy-btn {
+  transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+.bouncy-btn:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+.bouncy-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* 英國硬幣樣式 */
+.uk-coin {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.6);
+}
+.coin-1p { width: 48px; height: 48px; border-radius: 9999px; background: linear-gradient(135deg, #b45309, #78350f); border: 2.5px solid #d97706; color: #fff; }
+.coin-2p { width: 56px; height: 56px; border-radius: 9999px; background: linear-gradient(135deg, #c2410c, #7c2d12); border: 3px solid #ea580c; color: #fff; }
+.coin-5p { width: 44px; height: 44px; border-radius: 9999px; background: linear-gradient(135deg, #cbd5e1, #64748b); border: 2.5px solid #94a3b8; color: #0f172a; }
+.coin-10p { width: 54px; height: 54px; border-radius: 9999px; background: linear-gradient(135deg, #e2e8f0, #64748b); border: 3px solid #cbd5e1; color: #0f172a; }
+.coin-20p { width: 52px; height: 52px; clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%); background: #94a3b8; border: 2px solid #64748b; color: #0f172a; }
+.coin-pound { width: 58px; height: 58px; border-radius: 9999px; background: radial-gradient(circle, #e2e8f0 55%, #eab308 56%); border: 3.5px solid #ca8a04; color: #1e293b; }
+
+/* 皇家勳章 3 級進化 Shader */
+.tier-bronze {
+  background: linear-gradient(135deg, #78350f 0%, #b45309 100%);
+  border: 2px solid #d97706;
+}
+.tier-gold {
+  background: radial-gradient(circle at 30% 30%, #fef08a 0%, #eab308 60%, #ca8a04 100%);
+  border: 3px solid #facc15;
+  box-shadow: 0 0 16px rgba(234, 179, 8, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+.tier-gold::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.7) 50%, transparent 60%);
+  animation: goldSweep 3.2s infinite linear;
+}
+@keyframes goldSweep {
+  0% { transform: translate(-35%, -35%); }
+  100% { transform: translate(35%, 35%); }
+}
+
+.tier-diamond {
+  background: linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #f43f5e 100%);
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 22px rgba(168, 85, 247, 0.7);
+  animation: diamondShimmer 4s ease infinite alternate;
+}
+@keyframes diamondShimmer {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(60deg); }
+}
+
+/* 浮動展示動畫 */
+@keyframes gentleFloatWiggle {
+  0% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-6px) rotate(-3deg); }
+  50% { transform: translateY(0px) rotate(0deg); }
+  75% { transform: translateY(-6px) rotate(3deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+.animate-gentleFloatWiggle {
+  animation: gentleFloatWiggle 3.5s ease-in-out infinite;
+}
+
+.pop-in {
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.65) translateY(6px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+.animate-wiggle {
+  animation: wiggle 0.35s ease-in-out;
+}
