@@ -20,7 +20,7 @@ const PHONICS_DATA = [
   { sound: 'ai', example: 'rain', icon: '🌧️', phase: 'Phase 3' }
 ];
 
-// 2. Royal Mascot Themes (for Toddler / Nursery)
+// 2. Royal Mascot Themes
 const ROYAL_MASCOTS = [
   { emoji: '💂', name: 'Royal Guard' },
   { emoji: '🦢', name: 'Royal Swan' },
@@ -66,7 +66,7 @@ const ROYAL_HONOURS = [
   { id: 'h12', icon: '💎', name: 'Crown Jewel', desc: "The pinnacle of our realm! A supreme Royal Genius!" }
 ];
 
-// 6. British Governess & Teachers (優先女聲，調慢語速至 0.74 幼童友善速度)
+// 6. British Governess & Teachers (Pitch 統一保持 1.0，適配 iOS 原生自然發音)
 const TEACHER_PROFILES = [
   {
     id: 'victoria',
@@ -75,9 +75,9 @@ const TEACHER_PROFILES = [
     avatar: '👑',
     lang: 'en-GB',
     isFemale: true,
-    preferredNames: ['Martha', 'Moira', 'Hazel', 'Susan', 'Serena', 'Google UK English Female', 'Libby', 'Sonia', 'Victoria', 'Karen'],
-    rate: 0.74,
-    pitch: 1.15,
+    preferredNames: ['Stephanie', 'Martha', 'Moira', 'Karen', 'Serena', 'Google UK English Female', 'Libby', 'Victoria'],
+    rate: 0.76,
+    pitch: 1.00, // 修正：iOS 保持 1.0 絕不破音
     intro: "Welcome to the Royal Academy, my dear! I am Lady Victoria. Let us learn together!"
   },
   {
@@ -87,9 +87,9 @@ const TEACHER_PROFILES = [
     avatar: '🌸',
     lang: 'en-GB',
     isFemale: true,
-    preferredNames: ['Hazel', 'Google UK English Female', 'Libby', 'Serena', 'Female'],
+    preferredNames: ['Hazel', 'Susan', 'Google UK English Female', 'Libby', 'Female'],
     rate: 0.76,
-    pitch: 1.18,
+    pitch: 1.00, // 修正：避免金屬電音
     intro: "Good day, little scholar! I am Miss Catherine. You are doing ever so well!"
   },
   {
@@ -99,91 +99,105 @@ const TEACHER_PROFILES = [
     avatar: '🎩',
     lang: 'en-GB',
     isFemale: false,
-    preferredNames: ['George', 'Oliver', 'Google UK English Male', 'Male'],
-    rate: 0.75,
+    preferredNames: ['George', 'Oliver', 'Google UK English Male', 'Arthur', 'Male'],
+    rate: 0.76,
     pitch: 1.00,
     intro: "Good day! I am Master George. Ready for our mathematics and phonics quests?"
   }
 ];
 
-// 7. Full UK Curriculum Framework (Age 2 to 10)
+// 7. Full UK Curriculum Framework (2歲至10歲，每個等級具備 3-4 個精緻遊戲)
 const UK_CURRICULUM = {
   toddler: {
     icon: '🧸',
     title: 'Toddler (Age 2-3)',
-    desc: 'EYFS Sensory Sounds & Early Counting',
+    desc: 'EYFS Sensory Sounds, Sizing & Early Counting',
     ageRange: 'Age 2 - 3',
     topics: [
       { id: 'toddler_sounds', title: 'Phase 1 Sound Play', subtitle: 'Royal sounds & phonics', icon: '💂', color: 'from-amber-600 to-yellow-600' },
-      { id: 'toddler_count', title: 'Count 1 to 3', subtitle: 'Count royal mascots', icon: '👑', color: 'from-teal-600 to-emerald-700' }
+      { id: 'toddler_count', title: 'Count 1 to 3', subtitle: 'Count royal mascots', icon: '👑', color: 'from-teal-600 to-emerald-700' },
+      { id: 'toddler_compare', title: 'Big vs Small Sorting', subtitle: 'Visual size comparison', icon: '🐘', color: 'from-indigo-600 to-blue-700' }
     ]
   },
   nursery: {
     icon: '🌱',
     title: 'Nursery (Age 3-4)',
-    desc: 'Rhyme, Alliteration & Numbers 1-5',
+    desc: 'Rhyme, Alliteration, Shapes & Numbers 1-5',
     ageRange: 'Age 3 - 4',
     topics: [
+      { id: 'nursery_phonics', title: 'Phase 1 Alliteration', subtitle: 'Initial phonetic sounds', icon: '🔤', color: 'from-sky-600 to-indigo-700' },
       { id: 'nursery_count', title: 'Count 1 to 5', subtitle: 'Palace animals 1-5', icon: '🦢', color: 'from-emerald-600 to-teal-700' },
-      { id: 'nursery_phonics', title: 'Phase 1 Alliteration', subtitle: 'Initial phonetic sounds', icon: '🔤', color: 'from-sky-600 to-indigo-700' }
+      { id: 'nursery_shapes', title: '2D Royal Shapes', subtitle: 'Circle, Square, Triangle', icon: '🔷', color: 'from-amber-500 to-orange-600' }
     ]
   },
   reception: {
     icon: '🌸',
     title: 'Reception (Age 4-5)',
-    desc: 'Phase 2 Phonics & Ten-Frame Bonds',
+    desc: 'Phase 2 Phonics, CVC Words & Bonds to 10',
     ageRange: 'Age 4 - 5',
     topics: [
       { id: 'rec_phonics', title: 'Phase 2 Phonics', subtitle: 's, a, t, p, i, n blending', icon: '☀️', color: 'from-sky-500 to-blue-700' },
-      { id: 'rec_bonds', title: 'Ten-Frame Bonds', subtitle: 'Make number 10', icon: '🔟', color: 'from-amber-500 to-orange-700' }
+      { id: 'rec_bonds', title: 'Ten-Frame Bonds', subtitle: 'Make number 10', icon: '🔟', color: 'from-amber-500 to-orange-700' },
+      { id: 'rec_compare', title: 'More or Less?', subtitle: 'Compare quantities', icon: '⚖️', color: 'from-emerald-500 to-teal-700' },
+      { id: 'rec_sub', title: 'Take Away Subtraction', subtitle: 'Visual take-away math', icon: '✂️', color: 'from-rose-500 to-pink-700' }
     ]
   },
   year1: {
     icon: '⭐',
     title: 'Year 1 (Age 5-6)',
-    desc: 'Digraphs & British Sovereigns',
+    desc: 'Digraphs, UK Coins & Telling Time',
     ageRange: 'Age 5 - 6',
     topics: [
       { id: 'y1_digraphs', title: 'Digraphs (sh, ch, th)', subtitle: 'Phase 3 & 4 reading', icon: '🚢', color: 'from-indigo-600 to-purple-800' },
-      { id: 'y1_coins', title: 'British Coins', subtitle: '1p, 2p, 5p, 10p, £1', icon: '🪙', color: 'from-amber-500 to-yellow-600' }
+      { id: 'y1_coins', title: 'British Coins', subtitle: '1p, 2p, 5p, 10p, £1', icon: '🪙', color: 'from-amber-500 to-yellow-600' },
+      { id: 'y1_math20', title: 'Maths within 20', subtitle: 'Addition & Subtraction', icon: '⚡', color: 'from-rose-600 to-red-700' },
+      { id: 'y1_clock', title: "Telling the Time", subtitle: "o'clock & half past", icon: '⏰', color: 'from-sky-600 to-cyan-700' }
     ]
   },
   year2: {
     icon: '🚀',
     title: 'Year 2 (Age 6-7)',
-    desc: '2, 5, 10 Times Tables & Fluency',
+    desc: '2, 5, 10 Times Tables, Tens/Ones & Phase 5',
     ageRange: 'Age 6 - 7',
     topics: [
       { id: 'y2_times', title: '2, 5, 10 Times Tables', subtitle: 'Multiplication basics', icon: '✖️', color: 'from-rose-600 to-pink-700' },
-      { id: 'y2_phonics', title: 'Phase 5 Vowels', subtitle: 'Alternative sounds', icon: '📖', color: 'from-cyan-600 to-blue-800' }
+      { id: 'y2_phonics', title: 'Phase 5 Vowels', subtitle: 'Alternative sounds', icon: '📖', color: 'from-cyan-600 to-blue-800' },
+      { id: 'y2_place', title: 'Tens & Ones Value', subtitle: 'Crystal place value', icon: '💎', color: 'from-purple-600 to-indigo-800' },
+      { id: 'y2_mental', title: 'Rapid Mental Math', subtitle: 'Add tens and units', icon: '🚀', color: 'from-amber-600 to-orange-700' }
     ]
   },
   year3: {
     icon: '🏰',
     title: 'Year 3 (Age 7-8)',
-    desc: 'Royal Pantry (£/p) & 3, 4, 8 Tables',
+    desc: 'Royal Pantry (£/p), 3, 4, 8 Tables & Listening',
     ageRange: 'Age 7 - 8',
     topics: [
       { id: 'y3_market', title: 'Royal Pantry (£)', subtitle: 'Pound & pence sum', icon: '🧺', color: 'from-emerald-600 to-teal-800' },
-      { id: 'y3_times', title: '3, 4, 8 Times Tables', subtitle: 'KS2 multiplication', icon: '⚡', color: 'from-purple-600 to-indigo-800' }
+      { id: 'y3_times', title: '3, 4, 8 Times Tables', subtitle: 'KS2 multiplication', icon: '⚡', color: 'from-purple-600 to-indigo-800' },
+      { id: 'y3_listening', title: '🎧 Word Story Listening', subtitle: 'Listen and solve math', icon: '👂', color: 'from-sky-600 to-blue-700' },
+      { id: 'y3_coins', title: 'Change Calculation (£)', subtitle: 'Paying with £10 notes', icon: '💰', color: 'from-amber-500 to-yellow-600' }
     ]
   },
   year4: {
     icon: '⚔️',
     title: 'Year 4 (Age 8-9)',
-    desc: 'MTC Tables Check up to 12 × 12',
+    desc: 'MTC Tables Check up to 12 × 12 & Reasoning',
     ageRange: 'Age 8 - 9',
     topics: [
-      { id: 'y4_tables', title: 'MTC 12 × 12 Tables', subtitle: 'Official UK tables test', icon: '🎯', color: 'from-purple-700 to-pink-800' }
+      { id: 'y4_tables', title: 'MTC 12 × 12 Tables', subtitle: 'Official UK tables test', icon: '🎯', color: 'from-purple-700 to-pink-800' },
+      { id: 'y4_mental', title: 'Mental Speed Rocket', subtitle: 'Two-digit addition', icon: '🚀', color: 'from-rose-600 to-red-700' },
+      { id: 'y4_clock', title: 'Quarter Past & To', subtitle: 'Read analogue clock', icon: '🕰️', color: 'from-blue-600 to-indigo-800' }
     ]
   },
   year5: {
     icon: '👑',
     title: 'Year 5 (Age 9-10)',
-    desc: 'Prime Numbers & Mathematical Reasoning',
+    desc: 'Prime Numbers, Advanced Tables & Place Value',
     ageRange: 'Age 9 - 10',
     topics: [
-      { id: 'y5_primes', title: 'Prime Numbers', subtitle: 'Primes up to 50', icon: '💎', color: 'from-fuchsia-600 to-rose-700' }
+      { id: 'y5_primes', title: 'Prime Numbers', subtitle: 'Primes up to 50', icon: '💎', color: 'from-fuchsia-600 to-rose-700' },
+      { id: 'y5_tables', title: 'Master Multiplication', subtitle: 'Rapid mental check', icon: '⚡', color: 'from-purple-700 to-indigo-900' },
+      { id: 'y5_market', title: 'Multi-Item Checkout', subtitle: '3-item Royal basket', icon: '🛒', color: 'from-emerald-600 to-teal-800' }
     ]
   }
 };
