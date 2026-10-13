@@ -1,5 +1,5 @@
 /* =========================================================================
-   BritSparks - Core Game Engine & Royal Honours Management
+   BritSparks - Core Game Engine & Expanded Mission Handlers
    ========================================================================= */
 
 let currentGrade = 'reception';
@@ -12,7 +12,7 @@ let totalQuestions = 0;
 let correctCount = 0;
 let currentStars = 0;
 
-// 12 個皇家勳章進化狀態：0 (鎖定), 1 (Bronze), 2 (Gilded Gold), 3 (Crown Diamond)
+// 12 個皇家勳章進化狀態
 const honoursTierMap = {
   h1: 0, h2: 0, h3: 0, h4: 0, h5: 0, h6: 0,
   h7: 0, h8: 0, h9: 0, h10: 0, h11: 0, h12: 0
@@ -27,7 +27,7 @@ function safeSetText(id, text) {
 function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-// 渲染首頁年級卡片（2歲至10歲完整卡片）
+// 首頁年級卡片
 function renderCurriculumCards() {
   const container = document.getElementById('gradeCardsContainer');
   if (!container) return;
@@ -45,6 +45,9 @@ function renderCurriculumCards() {
         </div>
         <h3 class="text-lg font-black text-white font-serif mt-1">${item.title}</h3>
         <p class="text-xs font-bold text-slate-300 mt-0.5">${item.desc}</p>
+        <div class="mt-2 text-[11px] font-bold text-amber-400 bg-slate-900/60 px-2 py-1 rounded-lg">
+          🏰 ${item.topics.length} Royal Missions Included
+        </div>
       </div>
       <button type="button" onclick="selectGrade('${key}')" class="bouncy-btn royal-gold-btn mt-3 w-full text-slate-950 font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-amber-700">
         Enter Realm 👉
@@ -144,19 +147,49 @@ function generateQuestion() {
     case 'nursery_count':
       renderEarlyCountMission();
       break;
+    case 'toddler_compare':
+    case 'rec_compare':
+      renderCompareMission();
+      break;
+    case 'nursery_shapes':
+      renderShapesMission();
+      break;
     case 'rec_bonds':
       renderTenFrameMission();
       break;
+    case 'rec_sub':
+      renderSubtractionMission();
+      break;
     case 'y1_coins':
+    case 'y3_coins':
       renderUkCoinsMission();
+      break;
+    case 'y1_math20':
+      renderMath20Mission();
+      break;
+    case 'y1_clock':
+    case 'y4_clock':
+      renderClockMission();
       break;
     case 'y2_times':
     case 'y3_times':
     case 'y4_tables':
+    case 'y5_tables':
       renderTimesTableMission();
       break;
+    case 'y2_place':
+      renderPlaceValueMission();
+      break;
+    case 'y2_mental':
+    case 'y4_mental':
+      renderMentalSpeedMission();
+      break;
     case 'y3_market':
+    case 'y5_market':
       renderUkMarketMission();
+      break;
+    case 'y3_listening':
+      renderListeningStoryMission();
       break;
     case 'y5_primes':
       renderPrimeMission();
@@ -168,7 +201,7 @@ function generateQuestion() {
   speakBritishEnglish(activeQuestionPrompt);
 }
 
-/* 題目生成與邏輯 */
+/* 關卡渲染實作 */
 function renderPhonicsMission() {
   const stage = document.getElementById('stagePhonics');
   stage.style.display = 'flex';
@@ -226,6 +259,61 @@ function renderEarlyCountMission() {
   renderChoiceButtons([1, 2, 3, 4, 5].slice(0, 4));
 }
 
+function renderCompareMission() {
+  const stage = document.getElementById('stageEarlyCount');
+  stage.style.display = 'flex';
+  const mascot = getRandomItem(ROYAL_MASCOTS);
+
+  const leftCount = getRandomInt(2, 6);
+  let rightCount = getRandomInt(2, 6);
+  while (rightCount === leftCount) rightCount = getRandomInt(2, 6);
+
+  targetAnswer = leftCount > rightCount ? 'Left' : 'Right';
+  safeSetText('missionBadgeText', `Quantity Comparison`);
+  safeSetText('promptTitle', `Which Group has MORE?`);
+  safeSetText('promptSubtitle', `Compare Left vs Right!`);
+  activeQuestionPrompt = `Which group has more royal mascots? Left or Right?`;
+
+  const grid = document.getElementById('earlyCountGrid');
+  grid.innerHTML = `
+    <div class="flex items-center gap-6">
+      <div class="p-3 bg-slate-800 rounded-2xl border border-amber-400 text-center">
+        <div class="text-3xl">${mascot.emoji.repeat(leftCount)}</div>
+        <span class="text-xs font-black text-amber-300 mt-1 block">Left (${leftCount})</span>
+      </div>
+      <span class="text-2xl font-black text-amber-400">VS</span>
+      <div class="p-3 bg-slate-800 rounded-2xl border border-amber-400 text-center">
+        <div class="text-3xl">${mascot.emoji.repeat(rightCount)}</div>
+        <span class="text-xs font-black text-amber-300 mt-1 block">Right (${rightCount})</span>
+      </div>
+    </div>
+  `;
+
+  renderChoiceButtons(['Left', 'Right']);
+}
+
+function renderShapesMission() {
+  const stage = document.getElementById('stageEarlyCount');
+  stage.style.display = 'flex';
+  const shapes = [
+    { name: 'Circle', icon: '🔴' },
+    { name: 'Square', icon: '🟦' },
+    { name: 'Triangle', icon: '🔺' },
+    { name: 'Star', icon: '⭐' }
+  ];
+  const target = getRandomItem(shapes);
+  targetAnswer = target.name;
+
+  safeSetText('missionBadgeText', `Nursery 2D Shapes`);
+  safeSetText('promptTitle', `Identify the Shape`);
+  safeSetText('promptSubtitle', `Which shape is shown here?`);
+  activeQuestionPrompt = `What shape is this? Is it a ${target.name}?`;
+
+  const grid = document.getElementById('earlyCountGrid');
+  grid.innerHTML = `<div class="text-7xl p-4">${target.icon}</div>`;
+  renderChoiceButtons(shapes.map(s => s.name));
+}
+
 function renderTenFrameMission() {
   const stage = document.getElementById('stageTenFrame');
   stage.style.display = 'flex';
@@ -251,6 +339,24 @@ function renderTenFrameMission() {
   renderChoiceButtons([targetAnswer, (targetAnswer+2)%9+1, (targetAnswer+4)%9+1, (targetAnswer+5)%9+1].sort((a,b)=>a-b));
 }
 
+function renderSubtractionMission() {
+  const stage = document.getElementById('stageTimesTables');
+  stage.style.display = 'flex';
+  const a = getRandomInt(5, 10);
+  const b = getRandomInt(1, 4);
+  targetAnswer = a - b;
+
+  safeSetText('missionBadgeText', `Take Away Subtraction`);
+  safeSetText('promptTitle', `Royal Take Away`);
+  safeSetText('promptSubtitle', `${a} minus ${b} equals what?`);
+  activeQuestionPrompt = `What is ${a} take away ${b}?`;
+
+  safeSetText('timesTableA', a);
+  safeSetText('timesTableB', b);
+
+  renderChoiceButtons([targetAnswer, targetAnswer + 1, Math.max(1, targetAnswer - 2), targetAnswer + 3].sort((x,y)=>x-y));
+}
+
 function renderUkCoinsMission() {
   const stage = document.getElementById('stageUkCoins');
   stage.style.display = 'flex';
@@ -258,7 +364,7 @@ function renderUkCoinsMission() {
   const coin = getRandomItem(UK_COINS);
   targetAnswer = coin.name;
 
-  safeSetText('missionBadgeText', `KS1: British Coins`);
+  safeSetText('missionBadgeText', `British Sovereign Coins`);
   safeSetText('promptTitle', `Name the Sovereign Coin`);
   safeSetText('promptSubtitle', `Which coin is presented in the royal vault?`);
   activeQuestionPrompt = `Look at the coin. Is it ${coin.spoken}?`;
@@ -275,6 +381,118 @@ function renderUkCoinsMission() {
     if (!choices.includes(cand)) choices.push(cand);
   }
   renderChoiceButtons(choices.sort());
+}
+
+function renderMath20Mission() {
+  const stage = document.getElementById('stageTimesTables');
+  stage.style.display = 'flex';
+  const a = getRandomInt(6, 12);
+  const b = getRandomInt(3, 7);
+  targetAnswer = a + b;
+
+  safeSetText('missionBadgeText', `Year 1: Addition to 20`);
+  safeSetText('promptTitle', `Calculate Sum to 20`);
+  safeSetText('promptSubtitle', `${a} + ${b} = ?`);
+  activeQuestionPrompt = `What is ${a} plus ${b}?`;
+
+  safeSetText('timesTableA', a);
+  safeSetText('timesTableB', b);
+
+  renderChoiceButtons([targetAnswer, targetAnswer - 1, targetAnswer + 2, targetAnswer + 3].sort((x,y)=>x-y));
+}
+
+function renderClockMission() {
+  const stage = document.getElementById('stageEarlyCount');
+  stage.style.display = 'flex';
+  const isHalf = Math.random() > 0.5;
+  const hour = getRandomInt(1, 12);
+  targetAnswer = isHalf ? `${hour}:30` : `${hour}:00`;
+
+  safeSetText('missionBadgeText', `Telling the Time`);
+  safeSetText('promptTitle', `Look at the London Clock!`);
+  safeSetText('promptSubtitle', `What time does the clock say?`);
+  activeQuestionPrompt = `What time is it on the London clock face?`;
+
+  const grid = document.getElementById('earlyCountGrid');
+  grid.innerHTML = `
+    <div class="p-4 bg-slate-900 border-2 border-amber-400 rounded-3xl text-center">
+      <div class="text-5xl">🕰️</div>
+      <span class="text-sm font-black text-amber-300 mt-2 block">${isHalf ? `Half past ${hour}` : `${hour} o'clock`}</span>
+    </div>
+  `;
+
+  const choices = [targetAnswer, `${(hour%12)+1}:00`, `${hour}:15`, `${(hour%12)+1}:30`];
+  renderChoiceButtons(choices.sort());
+}
+
+function renderPlaceValueMission() {
+  const stage = document.getElementById('stageEarlyCount');
+  stage.style.display = 'flex';
+  const tens = getRandomInt(1, 5);
+  const ones = getRandomInt(1, 9);
+  targetAnswer = tens * 10 + ones;
+
+  safeSetText('missionBadgeText', `Tens and Ones Place Value`);
+  safeSetText('promptTitle', `Count the Royal Jewels`);
+  safeSetText('promptSubtitle', `${tens} Tens and ${ones} Ones = ?`);
+  activeQuestionPrompt = `What number is formed by ${tens} tens and ${ones} ones?`;
+
+  const grid = document.getElementById('earlyCountGrid');
+  grid.innerHTML = `
+    <div class="flex items-center gap-4 text-center">
+      <div class="p-3 bg-slate-800 border border-amber-400 rounded-2xl">
+        <span class="text-xs font-bold text-amber-300 block">Tens (10s)</span>
+        <div class="text-2xl mt-1">${'💎 '.repeat(tens)}</div>
+      </div>
+      <div class="p-3 bg-slate-800 border border-amber-400 rounded-2xl">
+        <span class="text-xs font-bold text-sky-300 block">Ones (1s)</span>
+        <div class="text-2xl mt-1">${'⭐ '.repeat(ones)}</div>
+      </div>
+    </div>
+  `;
+
+  renderChoiceButtons([targetAnswer, targetAnswer + 10, targetAnswer - 5, targetAnswer + 2].sort((x,y)=>x-y));
+}
+
+function renderMentalSpeedMission() {
+  const stage = document.getElementById('stageTimesTables');
+  stage.style.display = 'flex';
+  const a = getRandomInt(2, 6) * 10;
+  const b = getRandomInt(1, 4) * 10;
+  targetAnswer = a + b;
+
+  safeSetText('missionBadgeText', `Mental Speed Rocket`);
+  safeSetText('promptTitle', `Rapid Tens Addition`);
+  safeSetText('promptSubtitle', `${a} + ${b} = ?`);
+  activeQuestionPrompt = `Calculate in your head: what is ${a} plus ${b}?`;
+
+  safeSetText('timesTableA', a);
+  safeSetText('timesTableB', b);
+
+  renderChoiceButtons([targetAnswer, targetAnswer - 10, targetAnswer + 10, targetAnswer + 20].sort((x,y)=>x-y));
+}
+
+function renderListeningStoryMission() {
+  const stage = document.getElementById('stageEarlyCount');
+  stage.style.display = 'flex';
+  const a = getRandomInt(2, 5);
+  const b = getRandomInt(1, 3);
+  targetAnswer = a + b;
+
+  safeSetText('missionBadgeText', `🎧 Royal Listening Story`);
+  safeSetText('promptTitle', `Listen to Lady Victoria's Story`);
+  safeSetText('promptSubtitle', `How many royal guards are on duty altogether?`);
+  activeQuestionPrompt = `Listen carefully! There are ${a} guards standing at Windsor Castle. Then, ${b} more sentries arrive. How many guards are on duty altogether?`;
+
+  const grid = document.getElementById('earlyCountGrid');
+  grid.innerHTML = `
+    <div class="p-4 bg-slate-900 border border-amber-400 rounded-2xl text-center">
+      <div class="text-4xl">💂 🎧 💂</div>
+      <span class="text-xs font-bold text-slate-300 mt-2 block">"Listen carefully to the teacher..."</span>
+    </div>
+  `;
+
+  renderChoiceButtons([targetAnswer, targetAnswer + 1, Math.max(1, targetAnswer - 2), targetAnswer + 3].sort((x,y)=>x-y));
 }
 
 function renderTimesTableMission() {
@@ -307,13 +525,16 @@ function renderUkMarketMission() {
   const stage = document.getElementById('stageUkMarket');
   stage.style.display = 'flex';
 
-  const items = [getRandomItem(UK_STORE_ITEMS), getRandomItem(UK_STORE_ITEMS)];
-  targetAnswer = `£${items[0].price + items[1].price}`;
+  const count = currentMode === 'y5_market' ? 3 : 2;
+  const items = [];
+  for (let i = 0; i < count; i++) items.push(getRandomItem(UK_STORE_ITEMS));
+
+  targetAnswer = `£${items.reduce((acc, it) => acc + it.price, 0)}`;
 
   safeSetText('missionBadgeText', `Royal Pantry: Pounds (£)`);
   safeSetText('promptTitle', `Calculate Total Basket`);
   safeSetText('promptSubtitle', `Sum the items in British Pounds (£)`);
-  activeQuestionPrompt = `What is the total price in pounds for our afternoon tea?`;
+  activeQuestionPrompt = `What is the total price in pounds for our afternoon tea items?`;
 
   const list = document.getElementById('ukMarketItemList');
   list.innerHTML = items.map(it => `
@@ -323,8 +544,8 @@ function renderUkMarketMission() {
     </div>
   `).join('');
 
-  safeSetText('ukMarketEquation', `£${items[0].price} + £${items[1].price} = ?`);
-  const totalVal = items[0].price + items[1].price;
+  safeSetText('ukMarketEquation', items.map(i => `£${i.price}`).join(' + ') + ' = ?');
+  const totalVal = items.reduce((acc, it) => acc + it.price, 0);
   const choices = [targetAnswer, `£${totalVal + 1}`, `£${Math.max(1, totalVal - 2)}`, `£${totalVal + 3}`];
   renderChoiceButtons(choices.sort());
 }
@@ -385,7 +606,7 @@ function onAnswerCorrect() {
 
   safeSetText('promptTitle', 'Splendid! That is correct! ⭐');
 
-  // 每答對 3 題進階解鎖一個皇家勳章
+  // 每答對 3 題解鎖/升級皇家勳章
   if (totalQuestions % 3 === 0) {
     setTimeout(evolveRoyalBadge, 600);
   } else {
@@ -438,7 +659,7 @@ function updateAlbumBadgeCount() {
   safeSetText('albumTierBadge', `${count}/12`);
 }
 
-/* Modals */
+/* 彈窗管理 */
 window.openRoyalTreasuryModal = function() {
   soundTapPop();
   const container = document.getElementById('badgeGridContainer');
