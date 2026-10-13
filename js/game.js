@@ -1,5 +1,5 @@
 /* =========================================================================
-   BritSparks - Core Game Engine & Expanded Mission Handlers
+   BritSparks - Core Game Engine (Complete Bug Fix & Polish)
    ========================================================================= */
 
 let currentGrade = 'reception';
@@ -27,6 +27,13 @@ function safeSetText(id, text) {
 function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
+function unlockInteraction() {
+  isInputLocked = false;
+  document.querySelectorAll('button').forEach(btn => {
+    btn.disabled = false;
+  });
+}
+
 // 首頁年級卡片
 function renderCurriculumCards() {
   const container = document.getElementById('gradeCardsContainer');
@@ -46,7 +53,7 @@ function renderCurriculumCards() {
         <h3 class="text-lg font-black text-white font-serif mt-1">${item.title}</h3>
         <p class="text-xs font-bold text-slate-300 mt-0.5">${item.desc}</p>
         <div class="mt-2 text-[11px] font-bold text-amber-400 bg-slate-900/60 px-2 py-1 rounded-lg">
-          🏰 ${item.topics.length} Royal Missions Included
+          🏰 ${item.topics.length} Royal Missions
         </div>
       </div>
       <button type="button" onclick="selectGrade('${key}')" class="bouncy-btn royal-gold-btn mt-3 w-full text-slate-950 font-black text-xs sm:text-sm py-2 rounded-xl border-b-4 border-amber-700">
@@ -129,7 +136,7 @@ function hideAllStages() {
     if (el) el.style.display = 'none';
   });
   document.getElementById('numberOptionsRow').innerHTML = '';
-  isInputLocked = false;
+  unlockInteraction();
 }
 
 function generateQuestion() {
@@ -158,7 +165,7 @@ function generateQuestion() {
       renderTenFrameMission();
       break;
     case 'rec_sub':
-      renderSubtractionMission();
+      renderSubtractionMission(); // 修正：徹底消除乘號 Bug
       break;
     case 'y1_coins':
     case 'y3_coins':
@@ -201,7 +208,7 @@ function generateQuestion() {
   speakBritishEnglish(activeQuestionPrompt);
 }
 
-/* 關卡渲染實作 */
+/* 關卡渲染邏輯 */
 function renderPhonicsMission() {
   const stage = document.getElementById('stagePhonics');
   stage.style.display = 'flex';
@@ -212,7 +219,8 @@ function renderPhonicsMission() {
   safeSetText('missionBadgeText', `${currentPhonicsTarget.phase}: Sound Blending`);
   safeSetText('promptTitle', `Identify the Sound`);
   safeSetText('promptSubtitle', `Can you find the sound /${currentPhonicsTarget.sound}/?`);
-  activeQuestionPrompt = `Can you find the phonetic sound: ${currentPhonicsTarget.sound}, as in ${currentPhonicsTarget.example}?`;
+  // 修正：不再讀出字母名稱，改為地道 Phonics 發音口訣
+  activeQuestionPrompt = `Listen to the phonetic sound: ${currentPhonicsTarget.spokenPhonic}! Can you find it?`;
 
   safeSetText('phonicsTargetDisplay', currentPhonicsTarget.icon);
   safeSetText('phonicsHintWord', `Word: ${currentPhonicsTarget.example}`);
@@ -228,7 +236,7 @@ function renderPhonicsMission() {
 window.speakTargetPhonicsSound = function() {
   soundTapPop();
   if (currentPhonicsTarget) {
-    speakBritishEnglish(`The sound is: ${currentPhonicsTarget.sound}, as in ${currentPhonicsTarget.example}!`);
+    speakBritishEnglish(`The phonetic sound is: ${currentPhonicsTarget.spokenPhonic}`);
   }
 };
 
@@ -339,20 +347,30 @@ function renderTenFrameMission() {
   renderChoiceButtons([targetAnswer, (targetAnswer+2)%9+1, (targetAnswer+4)%9+1, (targetAnswer+5)%9+1].sort((a,b)=>a-b));
 }
 
+/* 核心修正：減法關卡絕不出現乘號！ */
 function renderSubtractionMission() {
   const stage = document.getElementById('stageTimesTables');
   stage.style.display = 'flex';
-  const a = getRandomInt(5, 10);
+  const a = getRandomInt(5, 9);
   const b = getRandomInt(1, 4);
   targetAnswer = a - b;
 
   safeSetText('missionBadgeText', `Take Away Subtraction`);
   safeSetText('promptTitle', `Royal Take Away`);
   safeSetText('promptSubtitle', `${a} minus ${b} equals what?`);
-  activeQuestionPrompt = `What is ${a} take away ${b}?`;
+  activeQuestionPrompt = `What is ${a} take away ${b}? Calculate carefully!`;
 
-  safeSetText('timesTableA', a);
-  safeSetText('timesTableB', b);
+  // 修正：動態切換減號與標題，徹底消除截圖中的 ✖️ 與 Multiplication 標題！
+  stage.innerHTML = `
+    <div class="text-xs font-black text-rose-300 bg-slate-900 border border-rose-400 px-3.5 py-1 rounded-full mb-3 font-serif">Royal Subtraction Quest</div>
+    <div class="royal-card px-8 py-5 flex items-center justify-center gap-3 text-3xl sm:text-5xl font-black text-white border-2 border-rose-400/60">
+      <span class="text-amber-300">${a}</span>
+      <span class="text-rose-400">➖</span>
+      <span class="text-sky-300">${b}</span>
+      <span class="text-emerald-400">🟰</span>
+      <span class="w-16 h-16 rounded-2xl border-4 border-dashed border-rose-400 bg-slate-900 flex items-center justify-center text-rose-400">❓</span>
+    </div>
+  `;
 
   renderChoiceButtons([targetAnswer, targetAnswer + 1, Math.max(1, targetAnswer - 2), targetAnswer + 3].sort((x,y)=>x-y));
 }
@@ -395,8 +413,16 @@ function renderMath20Mission() {
   safeSetText('promptSubtitle', `${a} + ${b} = ?`);
   activeQuestionPrompt = `What is ${a} plus ${b}?`;
 
-  safeSetText('timesTableA', a);
-  safeSetText('timesTableB', b);
+  stage.innerHTML = `
+    <div class="text-xs font-black text-amber-300 bg-slate-900 border border-amber-400 px-3.5 py-1 rounded-full mb-3 font-serif">Royal Addition to 20</div>
+    <div class="royal-card px-8 py-5 flex items-center justify-center gap-3 text-3xl sm:text-5xl font-black text-white border-2 border-amber-400/60">
+      <span class="text-amber-300">${a}</span>
+      <span class="text-emerald-400">➕</span>
+      <span class="text-sky-300">${b}</span>
+      <span class="text-emerald-400">🟰</span>
+      <span class="w-16 h-16 rounded-2xl border-4 border-dashed border-amber-400 bg-slate-900 flex items-center justify-center text-amber-400">❓</span>
+    </div>
+  `;
 
   renderChoiceButtons([targetAnswer, targetAnswer - 1, targetAnswer + 2, targetAnswer + 3].sort((x,y)=>x-y));
 }
@@ -417,7 +443,7 @@ function renderClockMission() {
   grid.innerHTML = `
     <div class="p-4 bg-slate-900 border-2 border-amber-400 rounded-3xl text-center">
       <div class="text-5xl">🕰️</div>
-      <span class="text-sm font-black text-amber-300 mt-2 block">${isHalf ? `Half past ${hour}` : `${hour} o'clock`}</span>
+      <span class="text-sm font-black text-amber-300 mt-2 block font-serif">${isHalf ? `Half past ${hour}` : `${hour} o'clock`}</span>
     </div>
   `;
 
@@ -441,11 +467,11 @@ function renderPlaceValueMission() {
   grid.innerHTML = `
     <div class="flex items-center gap-4 text-center">
       <div class="p-3 bg-slate-800 border border-amber-400 rounded-2xl">
-        <span class="text-xs font-bold text-amber-300 block">Tens (10s)</span>
+        <span class="text-xs font-bold text-amber-300 block font-serif">Tens (10s)</span>
         <div class="text-2xl mt-1">${'💎 '.repeat(tens)}</div>
       </div>
       <div class="p-3 bg-slate-800 border border-amber-400 rounded-2xl">
-        <span class="text-xs font-bold text-sky-300 block">Ones (1s)</span>
+        <span class="text-xs font-bold text-sky-300 block font-serif">Ones (1s)</span>
         <div class="text-2xl mt-1">${'⭐ '.repeat(ones)}</div>
       </div>
     </div>
@@ -466,8 +492,16 @@ function renderMentalSpeedMission() {
   safeSetText('promptSubtitle', `${a} + ${b} = ?`);
   activeQuestionPrompt = `Calculate in your head: what is ${a} plus ${b}?`;
 
-  safeSetText('timesTableA', a);
-  safeSetText('timesTableB', b);
+  stage.innerHTML = `
+    <div class="text-xs font-black text-amber-300 bg-slate-900 border border-amber-400 px-3.5 py-1 rounded-full mb-3 font-serif">Royal Mental Math</div>
+    <div class="royal-card px-8 py-5 flex items-center justify-center gap-3 text-3xl sm:text-5xl font-black text-white border-2 border-amber-400/60">
+      <span class="text-amber-300">${a}</span>
+      <span class="text-emerald-400">➕</span>
+      <span class="text-sky-300">${b}</span>
+      <span class="text-emerald-400">🟰</span>
+      <span class="w-16 h-16 rounded-2xl border-4 border-dashed border-amber-400 bg-slate-900 flex items-center justify-center text-amber-400">❓</span>
+    </div>
+  `;
 
   renderChoiceButtons([targetAnswer, targetAnswer - 10, targetAnswer + 10, targetAnswer + 20].sort((x,y)=>x-y));
 }
@@ -480,7 +514,7 @@ function renderListeningStoryMission() {
   targetAnswer = a + b;
 
   safeSetText('missionBadgeText', `🎧 Royal Listening Story`);
-  safeSetText('promptTitle', `Listen to Lady Victoria's Story`);
+  safeSetText('promptTitle', `Listen to the Story`);
   safeSetText('promptSubtitle', `How many royal guards are on duty altogether?`);
   activeQuestionPrompt = `Listen carefully! There are ${a} guards standing at Windsor Castle. Then, ${b} more sentries arrive. How many guards are on duty altogether?`;
 
@@ -510,8 +544,16 @@ function renderTimesTableMission() {
   safeSetText('promptSubtitle', `What is ${a} × ${b}?`);
   activeQuestionPrompt = `What is ${a} times ${b}? Calculate carefully!`;
 
-  safeSetText('timesTableA', a);
-  safeSetText('timesTableB', b);
+  stage.innerHTML = `
+    <div class="text-xs font-black text-amber-300 bg-slate-900 border border-amber-400 px-3.5 py-1 rounded-full mb-3 font-serif">Royal Multiplication Academy</div>
+    <div class="royal-card px-8 py-5 flex items-center justify-center gap-3 text-3xl sm:text-5xl font-black text-white border-2 border-amber-400/60">
+      <span class="text-amber-300">${a}</span>
+      <span class="text-rose-400">✖️</span>
+      <span class="text-sky-300">${b}</span>
+      <span class="text-emerald-400">🟰</span>
+      <span class="w-16 h-16 rounded-2xl border-4 border-dashed border-amber-400 bg-slate-900 flex items-center justify-center text-amber-400">❓</span>
+    </div>
+  `;
 
   const choices = [targetAnswer];
   while (choices.length < 4) {
@@ -563,8 +605,12 @@ function renderPrimeMission() {
   safeSetText('promptSubtitle', `Which number has only factors 1 and itself?`);
   activeQuestionPrompt = `Can you identify the prime number among these royal options?`;
 
-  safeSetText('timesTableA', 'Prime');
-  safeSetText('timesTableB', 'Number');
+  stage.innerHTML = `
+    <div class="text-xs font-black text-fuchsia-300 bg-slate-900 border border-fuchsia-400 px-3.5 py-1 rounded-full mb-3 font-serif">Royal Prime Numbers Academy</div>
+    <div class="royal-card px-8 py-5 flex items-center justify-center gap-3 text-2xl sm:text-4xl font-black text-white border-2 border-fuchsia-400/60 font-serif">
+      <span class="text-amber-300">Prime Number Quest</span>
+    </div>
+  `;
 
   const choices = [targetAnswer];
   while (choices.length < 4) {
@@ -659,6 +705,45 @@ function updateAlbumBadgeCount() {
   safeSetText('albumTierBadge', `${count}/12`);
 }
 
+/* 核心修正：關閉徽章展示視窗後，徹底解鎖並進入下一題，杜絕卡頓！ */
+window.closeShowcaseModal = function() {
+  soundTapPop();
+  document.getElementById('badgeShowcaseModal').style.display = 'none';
+  unlockInteraction();
+  generateQuestion(); // 確保關閉視窗後繼續流暢遊戲！
+};
+
+function openShowcaseModal(badge, tier) {
+  activeShowcaseBadge = badge;
+  safeSetText('showcaseBadgeName', badge.name);
+  safeSetText('showcaseSpeechText', `"${badge.desc}"`);
+
+  const tag = document.getElementById('showcaseTierTag');
+  const box = document.getElementById('showcaseIconContainer');
+  box.innerText = badge.icon;
+
+  if (tier === 3) {
+    soundGoldUpgradeChime();
+    tag.innerText = '💎 Crown Diamond Hologram';
+    box.className = 'w-28 h-28 rounded-3xl my-3 flex items-center justify-center text-6xl shadow-2xl animate-gentleFloatWiggle tier-diamond';
+  } else if (tier === 2) {
+    soundGoldUpgradeChime();
+    tag.innerText = '✨ Gilded Gold Honours';
+    box.className = 'w-28 h-28 rounded-3xl my-3 flex items-center justify-center text-6xl shadow-2xl animate-gentleFloatWiggle tier-gold';
+  } else {
+    tag.innerText = '🥉 Royal Bronze Medal';
+    box.className = 'w-28 h-28 rounded-3xl my-3 flex items-center justify-center text-6xl shadow-2xl animate-gentleFloatWiggle tier-bronze';
+  }
+
+  document.getElementById('badgeShowcaseModal').style.display = 'flex';
+  speakBritishEnglish(badge.desc);
+}
+
+window.replayShowcaseVoice = function() {
+  soundTapPop();
+  if (activeShowcaseBadge) speakBritishEnglish(activeShowcaseBadge.desc);
+};
+
 /* 彈窗管理 */
 window.openRoyalTreasuryModal = function() {
   soundTapPop();
@@ -698,42 +783,7 @@ window.openRoyalTreasuryModal = function() {
 window.closeRoyalTreasuryModal = function() {
   soundTapPop();
   document.getElementById('royalTreasuryModal').style.display = 'none';
-};
-
-function openShowcaseModal(badge, tier) {
-  activeShowcaseBadge = badge;
-  safeSetText('showcaseBadgeName', badge.name);
-  safeSetText('showcaseSpeechText', `"${badge.desc}"`);
-
-  const tag = document.getElementById('showcaseTierTag');
-  const box = document.getElementById('showcaseIconContainer');
-  box.innerText = badge.icon;
-
-  if (tier === 3) {
-    soundGoldUpgradeChime();
-    tag.innerText = '💎 Crown Diamond Hologram';
-    box.className = 'w-28 h-28 rounded-3xl my-3 flex items-center justify-center text-6xl shadow-2xl animate-gentleFloatWiggle tier-diamond';
-  } else if (tier === 2) {
-    soundGoldUpgradeChime();
-    tag.innerText = '✨ Gilded Gold Honours';
-    box.className = 'w-28 h-28 rounded-3xl my-3 flex items-center justify-center text-6xl shadow-2xl animate-gentleFloatWiggle tier-gold';
-  } else {
-    tag.innerText = '🥉 Royal Bronze Medal';
-    box.className = 'w-28 h-28 rounded-3xl my-3 flex items-center justify-center text-6xl shadow-2xl animate-gentleFloatWiggle tier-bronze';
-  }
-
-  document.getElementById('badgeShowcaseModal').style.display = 'flex';
-  speakBritishEnglish(badge.desc);
-}
-
-window.replayShowcaseVoice = function() {
-  soundTapPop();
-  if (activeShowcaseBadge) speakBritishEnglish(activeShowcaseBadge.desc);
-};
-
-window.closeShowcaseModal = function() {
-  soundTapPop();
-  document.getElementById('badgeShowcaseModal').style.display = 'none';
+  unlockInteraction();
 };
 
 window.openTeacherVoiceModal = function() {
@@ -800,4 +850,5 @@ window.closeParentGateModal = function() {
 document.addEventListener('DOMContentLoaded', () => {
   renderCurriculumCards();
   updateAlbumBadgeCount();
+  unlockInteraction();
 });
